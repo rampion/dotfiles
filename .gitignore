@@ -10,10 +10,13 @@
 # Recursion is bad
 .files/
 
-# vim swap files (editor state)
+# vim swap files (file state)
 .sw?
 .*.sw?
+# vim global  state
 .viminfo
+# vim backup files
+*~ 
 
 # OSX folder-specific information
 .DS_Store
