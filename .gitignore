@@ -1,0 +1,27 @@
+# ignore file for ~/.files (used by `dotfiles` alias)
+
+# ignore anything that DOESN'T start with a dot
+*
+!.*
+!.*/*
+# the !.* overrode any settings from core.excludesfile, so we
+# must repeat them here for any dot files we wish to ignore
+
+# Recursion is bad
+.files/
+
+# vim swap files (editor state)
+.sw?
+.*.sw?
+.viminfo
+
+# OSX folder-specific information
+.DS_Store
+
+# eww, trash, yukky
+.Trash
+
+# history changes too fast to be useful
+.ghc/ghci_history
+.bash_history
+.bash_sessions
