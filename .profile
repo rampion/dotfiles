@@ -5,6 +5,7 @@ export GOPATH=~/Documents/Code/Go
 
 export PATH=\
 ${HOME}/.cabal/bin:\
+${HOME}/.local/bin:\
 /usr/local/bin:\
 $HOME/Library/Haskell/bin:\
 $HOME/.cargo/bin:\
