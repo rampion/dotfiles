@@ -39,6 +39,9 @@ Projects/
 # eww, trash, yukky
 .Trash
 
+# cached files from various applications
+.cache
+
 # history changes too fast to be useful
 .ghc/ghci_history
 .bash_history
