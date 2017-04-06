@@ -23,6 +23,9 @@ Projects/
 # don't share ssh settings
 .ssh
 
+# don't track installed files
+.cabal
+
 # vim global state
 .viminfo
 # backups of files edited in vim
