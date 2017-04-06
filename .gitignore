@@ -26,6 +26,10 @@ Projects/
 # don't track installed files
 .cabal
 .cargo
+.gem
+
+# don't share printer preferences between machines
+.cups
 
 # vim global state
 .viminfo
