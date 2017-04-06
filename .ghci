@@ -1,0 +1,41 @@
+-- show loaded modules in gray on line above a "λ" prompt in cyan
+:set prompt "\SOH\ESC[37m%s\n\ESC[0;36m\STXλ \SOH\ESC[m\STX"
+-- use a "⋮" prompt in cyan for :{ ... :}
+:set prompt2 "\SOH\ESC[0;36m\STX⋮ \SOH\ESC[m\STX"
+
+import Prelude as P
+
+import Control.Monad as C
+import Control.Applicative as C
+import Control.Arrow as C
+
+import qualified Data.List as L
+import qualified Data.Map as M
+import qualified Data.Set as S
+
+-- Create a create a GHCi command that runs the `hoogle` command line tool. By
+-- default, the top three results are output, and the output is colorized.
+-- 
+-- Using +package, +Module.Name, -package or -Module.Name as part of the
+-- search string is supported.
+-- 
+-- The long-form options to hoogle search are supported, eg:
+-- 
+--  --color=0   Disable color output
+--  --count=int Maximum number of results to print, defaults to showing all results
+--  --start=int 1-based index of first result to print, defaults to 1
+--  --info      Show extended information for the first results 
+--  --verbose   Loud verbosity
+--  --quiet     Quiet verbosity
+-- 
+-- Adapted from http://www.haskell.org/haskellwiki/Hoogle#Command_Line_Search_Flags
+:{
+:def hoogle \x -> 
+     -- separate the options from the search string
+     let (vs, ws) = Data.List.partition (Data.List.isPrefixOf "--") $ words x
+         search = show $ unwords ws
+         -- default to showing color
+         opts   = "--color" : "--count=3" : vs
+     in return . unwords $ ":!hoogle " : search : opts
+:}
+-- vim: ft=haskell
