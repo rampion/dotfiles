@@ -20,6 +20,9 @@ Projects/
 # Recursion is bad
 .files/
 
+# don't share ssh settings
+.ssh
+
 # vim global state
 .viminfo
 # backups of files edited in vim
