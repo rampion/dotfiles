@@ -25,6 +25,7 @@ Projects/
 
 # don't track installed files
 .cabal
+.cargo
 
 # vim global state
 .viminfo
@@ -41,6 +42,7 @@ Projects/
 
 # cached files from various applications
 .cache
+
 
 # history changes too fast to be useful
 .ghc/ghci_history
