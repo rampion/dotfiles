@@ -1,22 +1,31 @@
 # ignore file for ~/.files (used by `dotfiles` alias)
 
-# ignore anything that DOESN'T start with a dot
-*
-!.*
-!.*/*
-# the !.* overrode any settings from core.excludesfile, so we
-# must repeat them here for any dot files we wish to ignore
+# standard OSX home directories
+Applications/
+Desktop/
+Documents/
+Downloads/
+Library/
+Movies/
+Music/
+Pictures/
+Public/
+Sites/
+
+# custom home directories
+VirtualBox\ VMs/
+Google\ Drive/
+Projects/
 
 # Recursion is bad
 .files/
 
-# vim swap files (file state)
-.sw?
-.*.sw?
-# vim global  state
+# vim global state
 .viminfo
-# vim backup files
-*~ 
+# backups of files edited in vim
+.vim/backup/
+# extensions to vim, managed in .vimrc
+.vim/bundle/
 
 # OSX folder-specific information
 .DS_Store
@@ -29,3 +38,27 @@
 .bash_history
 .bash_sessions
 .lesshst
+.gdb_history
+.irb-history
+.irb_history
+.lldb-history
+.octave_hist
+.sh_history
+.spark_history
+.swipl-dir-history
+.vim/.netrwhist
+
+# created by startx (X11)
+.serverauth.*
+
+# stores credentials used by xauth
+.Xauthority
+
+# zsh-generated completion information
+.zcompdump
+
+# seed file with random numbers used by OpenSSH or apps that make use of OpenSSH.
+.rnd
+
+# cache files created by nodejs's v8flags module
+.v8flags.3.14.5.9.*
