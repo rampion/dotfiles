@@ -34,13 +34,12 @@ colo desert " a slightly more muted colorscheme
 set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 
 " put timestamped backup copies of files in ~/.vim/backup
-let bud = $HOME . "/.vim/backup"
-if isdirectory( bud ) == 0
-  call mkdir(bud, "p")
+let &backupdir = $HOME . "/.vim/backup"
+if isdirectory( &backupdir ) == 0
+  call mkdir(&backupdir, "p")
   " clean the directory weekly with crontab
-  call system('(crontab -l ; echo ''@midnight find '.bud.' -not -newerat "1 week ago" -delete'') | crontab -')
+  call system('(crontab -l ; echo ''@midnight find '.&backupdir.' -not -newerat "1 week ago" -delete'') | crontab -')
 endif
-let &backupdir=bud
 au BufWritePre * let &backupext = ' ' . substitute(expand('%:p:h'),'/',':', 'g') . ' ' . strftime("%Y.%m.%d %H:%M:%S")
 
 " check top/bottom two lines for vim commands
