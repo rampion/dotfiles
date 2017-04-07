@@ -4,7 +4,7 @@ source $VIMRUNTIME/vimrc_example.vim
 " (enable fieltype detection and indenting)
 filetype plugin indent on " needed for NeoBundle
 
-if isdirectory('~/.vim/bundle/neobundle.vim') || 
+if isdirectory($HOME . '/.vim/bundle/neobundle.vim') || 
       \ system('git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim')
 
   " manage bundles with NeoBundle
