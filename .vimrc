@@ -38,7 +38,7 @@ let bud = $HOME . "/.vim/backup"
 if isdirectory( bud ) == 0
   call mkdir(bud, "p")
   " clean the directory weekly with crontab
-  system('(crontab -l ; echo ''@midnight find '.bud.' -not -newerat "1 week ago" -delete'') | crontab -')
+  call system('(crontab -l ; echo ''@midnight find '.bud.' -not -newerat "1 week ago" -delete'') | crontab -')
 endif
 let &backupdir=bud
 au BufWritePre * let &backupext = ' ' . substitute(expand('%:p:h'),'/',':', 'g') . ' ' . strftime("%Y.%m.%d %H:%M:%S")
