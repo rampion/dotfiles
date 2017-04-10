@@ -54,6 +54,9 @@ set nowrap sidescroll=5 listchars+=precedes:↩,extends:↪
 " enable per-project .vimrc
 set exrc secure
 
+" complete ex-commands by longest common substring, then show a list
+set wildmode=list:longest,full
+
 " use <Space> as <Leader> for custom mappings
 let maplocalleader = " "
 let mapleader = " "
