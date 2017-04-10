@@ -69,3 +69,7 @@ nnoremap <S-Tab> :tabprevious<CR>
 nnoremap <Leader>m :make<CR>
 nnoremap <Leader>b :make build<CR>
 nnoremap <Leader>t :make test<CR>
+
+" use vim's built-in man page viewer (|:help find-manpage|)
+runtime! ftplugin/man.vim
+nnoremap K :Man <cword><CR>
