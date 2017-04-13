@@ -57,6 +57,9 @@ set exrc secure
 " complete ex-commands by longest common substring, then show a list
 set wildmode=list:longest,full
 
+" yay for auto-indentation in programming languages
+set smartindent
+
 " use <Space> as <Leader> for custom mappings
 let maplocalleader = " "
 let mapleader = " "
