@@ -2,7 +2,7 @@
 	name = Noah Luck Easterly
 	email = noah.easterly@gmail.com
 [core]
-	excludesfile = .gitexcludes
+	excludesfile = ~/.gitexcludes
 [alias]
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit
 	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
