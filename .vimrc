@@ -60,6 +60,9 @@ set wildmode=list:longest,full
 " yay for auto-indentation in programming languages
 set smartindent
 
+" jumping to errors reuses open windows, or uses a new tab
+set switchbuf=newtab,usetab
+
 " use <Space> as <Leader> for custom mappings
 let maplocalleader = " "
 let mapleader = " "
