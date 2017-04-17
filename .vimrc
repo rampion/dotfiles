@@ -1,14 +1,12 @@
 source $VIMRUNTIME/vimrc_example.vim
 
-" see |:help vimrc-filetype|
-" (enable fieltype detection and indenting)
-filetype plugin indent on " needed for NeoBundle
-
 if isdirectory($HOME . '/.vim/bundle/neobundle.vim') || 
       \ system('git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim')
 
   " manage bundles with NeoBundle
   set runtimepath+=~/.vim/bundle/neobundle.vim/
+    
+  filetype plugin indent on " will be reset by neobundle#begin
 
   call neobundle#begin(expand('~/.vim/bundle/'))
   NeoBundleFetch 'Shougo/neobundle.vim'
@@ -26,6 +24,10 @@ if isdirectory($HOME . '/.vim/bundle/neobundle.vim') ||
   NeoBundleCheck
 endif
 
+" see |:help vimrc-filetype|
+" (enable filetype detection, indenting, and plugins)
+filetype plugin indent on
+
 syntax on " enable syntax coloring by default
 
 colo desert " a slightly more muted colorscheme
@@ -38,7 +40,7 @@ let &backupdir = $HOME . "/.vim/backup"
 if isdirectory( &backupdir ) == 0
   call mkdir(&backupdir, "p")
   " clean the directory weekly with crontab
-  call system('(crontab -l ; echo ''@midnight find '.&backupdir.' -not -newerat "1 week ago" -delete'') | crontab -')
+  call system('(crontab -l ; echo "''@midnight find '.&backupdir.' -not -newerat "1 week ago" -delete'')" | crontab -')
 endif
 au BufWritePre * let &backupext = ' ' . substitute(expand('%:p:h'),'/',':', 'g') . ' ' . strftime("%Y.%m.%d %H:%M:%S")
 
