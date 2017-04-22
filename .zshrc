@@ -1,3 +1,5 @@
+# loaded by all shells, but not scripts
+
 # enable completion
 autoload -U compinit
 compinit
