@@ -1,1 +1,1 @@
-/Users/rampion/.profile
+./.profile
