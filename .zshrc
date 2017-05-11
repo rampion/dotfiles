@@ -10,10 +10,43 @@ bindkey -v
 setopt autolist # list ambiguous tab-completions
 compctl -c man # use commands as tab-completions for arguments to man
 setopt correctall # correct spelling on commands (setopt correct) and arguments
-setopt histignoredups # don't save current line if it's the same as the last one
-setopt appendhistory # have all simultaneous sessions append their history
 setopt noclobber # don't overwrite existing files (use >! if you still want to)
 setopt ignoreeof # don't close the shell on CTRL-D (end-of-file)
+
+setopt appendhistory # have all simultaneous sessions append their history
+setopt histignoredups # don't save current line if it's the same as the last one
+setopt nohistbeep # don't beep when trying to access a non-existent history entry
+# If a new command line being added to the history list duplicates an older one, the older com-
+# mand is removed from the list (even if it is not the previous event).
+setopt histignorealldups
+# Remove  command  lines from the history list when the first character on the line is a space,
+# or when one of the expanded aliases contains a  leading  space.	Only  normal  aliases  (not
+# global or suffix aliases) have this behaviour.  Note that the command lingers in the internal
+# history until the next command is entered before it vanishes, allowing you to  briefly  reuse
+# or edit the line.  If you want to make it vanish right away without entering another command,
+# type a space and press return.
+setopt histignorespace
+# Remove the history (fc -l) command from the history list when invoked.  Note that the command
+# lingers  in the internal history until the next command is entered before it vanishes, allow-
+# ing you to briefly reuse or edit the line.
+setopt histnostore
+# Remove superfluous blanks from each command line being added to the history list.
+setopt histreduceblanks
+# When writing out the history file, older commands that duplicate newer ones are omitted.
+setopt histsavenodups
+# Whenever the user enters a line with history expansion,  don't  execute  the  line  directly;
+# instead, perform history expansion and reload the line into the editing buffer.
+setopt histverify
+# This  options works like APPEND_HISTORY except that new history lines are added to the $HIST-
+# FILE incrementally (as soon as they are entered), rather than waiting until the shell  exits.
+# The  file will still be periodically re-written to trim it when the number of lines grows 20%
+setopt incappendhistory
+
+if [[ $USER != "root" ]]; then
+  HISTFILE="$HOME/.zsh_history"
+  HISTSIZE=9999
+  SAVEHIST=9999
+fi
 
 autoload -U colors
 colors
