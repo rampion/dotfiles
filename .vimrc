@@ -84,5 +84,5 @@ nnoremap K :Man <cword><CR>
 
 " by default * and # use ignorecase, but not smartcase - make them both
 " literal
-nnoremap * :let @/='\<'.expand('<cword>').'\>' <bar> let v:searchforward=1 <bar> normal n<CR>
-nnoremap # :let @/='\<'.expand('<cword>').'\>' <bar> let v:searchforward=0 <bar> normal n<CR>
+nnoremap * :let @/='\<'.expand('<cword>').'\>\C' <bar> let v:searchforward=1 <bar> normal n<CR>
+nnoremap # :let @/='\<'.expand('<cword>').'\>\C' <bar> let v:searchforward=0 <bar> normal n<CR>
