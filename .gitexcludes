@@ -3,3 +3,4 @@
 .sw?
 *.o
 *~
+.DS_Store
