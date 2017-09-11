@@ -167,7 +167,7 @@ zstyle ':vcs_info:*' formats '%1(c:11:%1(u:208:10))' '%1(c:&:%1(u:@:%%%%))' '%R%
 # used during rebase/merge/etc
 zstyle ':vcs_info:*' actionformats '%1(c:11:%1(u:208:10))' '%1(c:&:%1(u:@:%%%%))' '%R%B%F{%1(c:11:%1(u:208:10))}#%b%f%F{white}(%a)%f%%b%F{14}%S'
 # used when no vcs detected (bug in zsh-5.2, upgrade to fix)
-zstyle ':vcs_info:*' nvcsformats '245' '$' '%~' ''
+zstyle ':vcs_info:*' nvcsformats '245' '$' '%~'
 
 # register hooks to tweak values passed to formats
 zstyle ':vcs_info:*+start-up:*' hooks zshprompt-start-up
