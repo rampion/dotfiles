@@ -53,7 +53,7 @@ fi
 if ! [ -z $TMUX ]; then
 	# use the current user as the prefix of the current tab title (since that's
 	# fairly important, and I change it fairly often)
-  TAB_TITLE_PREFIX='"${USER}$PROMPT_CHAR"'
+  TAB_TITLE_PREFIX='"${USER}:"'
 	# when at the shell prompt, show a truncated version of the current path (with
 	# standard ~ replacement) as the rest of the title.
 	TAB_TITLE_PROMPT='`echo $PWD | sed "s/^\/Users\//~/;s/^~$USER/~/;s/\/..*\//\/...\//"`'
