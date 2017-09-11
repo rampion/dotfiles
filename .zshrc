@@ -48,53 +48,7 @@ if [[ $USER != "root" ]]; then
   SAVEHIST=9999
 fi
 
-autoload -U colors
-colors
-function get_color {
-	local lc=$'\e[' rc=m	# Standard ANSI terminal escape values
-	local sep=""
-	local codes=""
-	for name in $*[@]; do
-		if [[ 0 -lt $name && $name -lt 64 ]]; then
-			codes="$codes$sep$name"
-		else
-			codes="$codes$sep${color[$name]}"
-		fi
-		sep=";"
-	done
-	print "$lc$codes$rc"
-}
-
-# set up the prompt
-if [[ -n $USE_POWERLINE ]] ; then
-  # set up powerline
-  export POWERLINE_ROOT=$PYTHON_ROOT/lib/python/site-packages
-  powerline-daemon -q
-  . $POWERLINE_ROOT/powerline/bindings/zsh/powerline.zsh
-else
-  if [[ $USER == "root" ]]; then
-  	PROMPT_CHAR="#"
-  else
-  	PROMPT_CHAR=":"
-  fi
-  
-  # see /usr/share/zsh/4.2.3/functions/colors
-  if [[ $TERM == "vt100" ]]; then
-  	# WidgetTerm seems to be able to do faint, though Terminal can't
-  	local PROMPT_COLOR=`get_color none faint black`
-  	local RPROMPT_COLOR=`get_color none faint magenta`
-  	local RPROMPT_PATH_COLOR=`get_color none faint cyan`
-  else
-  	local PROMPT_COLOR=`get_color none green`
-  	local RPROMPT_COLOR=`get_color none magenta`
-  	local RPROMPT_PATH_COLOR=`get_color none cyan`
-  fi
-  local RPROMPT_ERROR_COLOR=`get_color bold red`
-  PROMPT="%{$PROMPT_COLOR%}%h$PROMPT_CHAR%{$reset_color%} "
-  RPROMPT="%{$RPROMPT_COLOR%}[%(?..%{$RPROMPT_ERROR_COLOR%}error %?%{$RPROMPT_COLOR%} )%n:%{$RPROMPT_PATH_COLOR%}%40</...<%~%<<%{$RPROMPT_COLOR%}]%{$reset_color%}"
-fi
-
-# if using tmux, let zsh tell tmuxwhat the title and hardstatus
+# if using tmux, let zsh tell tmux what the title and hardstatus
 # of the tab window should be.
 if ! [ -z $TMUX ]; then
 	# use the current user as the prefix of the current tab title (since that's
@@ -147,3 +101,5 @@ fi
 autoload edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
+
+source ~/.zshprompt
