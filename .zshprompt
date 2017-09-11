@@ -66,9 +66,9 @@
 #     cursor:   ^
 #
 # 6) The current directory is ~/Documents, which is not under version control.
-#    The previous command returned 5.
+#    The previous command, "foo -n bar", returned 5.
 #
-#     prompt:   $?=5                                          ERROR 
+#     prompt:   $?=5 foo -n bar                               ERROR 
 #             $                                       [~/Documents]
 #     cursor:   ^
 
@@ -86,17 +86,19 @@ setopt prompt_subst
 #   $'...'              - render escapes in ...
 #
 #   The first line is only printed when there is an error (non-zero exit code)
-#   and contains "\$?=$?  ...   ERROR " in red text on a yellow background wide
-#   enough to fill the entire terminal.
+#   and contains "\$?=$?  {previous command} ...   ERROR " in yellow text on a
+#   red background wide  enough to fill the entire terminal.
 #
 #   %(?::...)           - print ... if $? != 0
 #   %B...%b             - print ... in bold 
-#   %F{196}...%f        - print ... in bright red text
-#   %K{52}...%k         - print ... on a dark red background
+#   %F{11}...%f         - print ... in bright yellow text
+#   %K{196}...%k        - print ... on a bright red background
 #   %(/:...:)           - print ... unconditionally (grouping for %>>)
 #   %N>>...             - truncate ... on the right after N characters
 #   $(($COLUMNS-6)      - arithmetic expansion, six less than the number of columns in the terminal (leave room for "ERROR ")
 #   %?                  - the return status of the prior command
+#   %F{white}...%f      - print ... in white
+#   $(history -n -1)    - command expansion, the previous command
 #   ${(l:COLUMNS:)}     - parameter expansion, $COLUMN characters of whitespace
 #
 #   The last line gets the glyph and glyph color from the results of running vcs_info.
@@ -104,7 +106,7 @@ setopt prompt_subst
 #   %F{${vcs_info_msg_0_}}...%f   - print ... using the color given by $vcs_info_msg_0_
 #   %(!,#,${vcs_info_msg_1_})     - print '#' if root or $vcs_info_msg_1_' if a normal user
 #
-export PROMPT=$'%(?::%B%F{196}%K{52}%(/:%$(($COLUMNS-6))>>  \\$?=%? ${(l:COLUMNS:)}:)ERROR %b%f%k\n)%B%F{${vcs_info_msg_0_}}%(!,#,${vcs_info_msg_1_})%f%b '
+export PROMPT=$'%(?::%B%F{11}%K{196}%(/:%$(($COLUMNS-6))>>  \\$?=%? %F{white}$(history -n -1)%f%F{11}${(l:COLUMNS:)}:)ERROR %b%f%k\n)%B%F{${vcs_info_msg_0_}}%(!,#,${vcs_info_msg_1_})%f%b '
 
 # RPROMPT key:
 #   $'...'              - render escapes in ...
