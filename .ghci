@@ -1,7 +1,8 @@
 -- show loaded modules in gray on line above a "λ" prompt in cyan
 :set prompt "\SOH\ESC[37m%s\n\ESC[0;36m\STXλ \SOH\ESC[m\STX"
 -- use a "⋮" prompt in cyan for :{ ... :}
-:set prompt2 "\SOH\ESC[0;36m\STX⋮ \SOH\ESC[m\STX"
+-- prompt2 renamed to prompt-cont in 8.2
+:set prompt-cont "\SOH\ESC[0;36m\STX⋮ \SOH\ESC[m\STX"
 
 import Prelude as P
 
