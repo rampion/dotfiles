@@ -178,6 +178,10 @@ zstyle ':vcs_info:*+start-up:*' hooks zshprompt-start-up
       user_data[git_dir]=$GIT_DIR
     fi
     export GIT_DIR=$HOME/.files
+    if (( ${+GIT_WORK_TREE} )) ; then
+      user_data[git_work_tree]=$GIT_WORK_TREE
+    fi
+    export GIT_WORK_TREE=$HOME
   fi
 }
 
@@ -210,6 +214,11 @@ zstyle ':vcs_info:*+post-backend:*' hooks zshprompt-post-backend
       export GIT_DIR=${user_data[git_dir]}
     else
       unset GIT_DIR
+    fi
+    if (( ${+user_data[git_work_tree]} )) ; then
+      export GIT_WORK_TREE=${user_data[git_work_tree]}
+    else
+      unset GIT_WORK_TREE
     fi
   fi
 }
