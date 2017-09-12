@@ -93,12 +93,12 @@ setopt prompt_subst
 #   %B...%b             - print ... in bold 
 #   %F{11}...%f         - print ... in bright yellow text
 #   %K{196}...%k        - print ... on a bright red background
-#   %(/:...:)           - print ... unconditionally (grouping for %>>)
-#   %N>>...             - truncate ... on the right after N characters
+#   %(?::%N>>...)       - truncate ... on the right after N characters
 #   $(($COLUMNS-6)      - arithmetic expansion, six less than the number of columns in the terminal (leave room for "ERROR ")
 #   %?                  - the return status of the prior command
 #   %F{white}...%f      - print ... in white
-#   $(history -n -1)    - command expansion, the previous command
+#   $(history -n -1 | sed "s/[)%]/%&/g" )
+#                       - command expansion, the previous command, with special characters escaped
 #   ${(l:COLUMNS:)}     - parameter expansion, $COLUMN characters of whitespace
 #
 #   The last line gets the glyph and glyph color from the results of running vcs_info.
@@ -106,7 +106,7 @@ setopt prompt_subst
 #   %F{${vcs_info_msg_0_}}...%f   - print ... using the color given by $vcs_info_msg_0_
 #   %(!,#,${vcs_info_msg_1_})     - print '#' if root or $vcs_info_msg_1_' if a normal user
 #
-export PROMPT=$'%(?::%B%F{11}%K{196}%(/:%$(($COLUMNS-6))>>  \\$?=%? %F{white}$(history -n -1)%f%F{11}${(l:COLUMNS:)}:)ERROR %b%f%k\n)%F{${vcs_info_msg_0_}}%(!,#,${vcs_info_msg_1_})%f '
+export PROMPT=$'%(?::%B%F{11}%K{196}%(?::%$(($COLUMNS-6))>>  \\$?=%? %F{white}$(history -n -1 | sed "s/[)%]/%&/g" )%f%F{11}${(l:COLUMNS:)})ERROR %b%f%k\n)%F{${vcs_info_msg_0_}}%(!,#,${vcs_info_msg_1_})%f '
 
 # RPROMPT key:
 #   $'...'              - render escapes in ...
