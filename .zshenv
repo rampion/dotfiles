@@ -7,6 +7,7 @@ ${HOME}/.cabal/bin:\
 ${HOME}/.local/bin:\
 /usr/local/bin:\
 $HOME/Library/Haskell/bin:\
+$HOME/Library/Python/3.6/bin:\
 $HOME/.cargo/bin:\
 $PATH:\
 $PYTHON_ROOT/bin:\
