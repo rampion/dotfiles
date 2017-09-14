@@ -58,53 +58,36 @@ if [[ $USER != "root" ]]; then
   SAVEHIST=9999
 fi
 
-# if using tmux, let zsh tell tmux what the title and hardstatus
-# of the tab window should be.
+# if using tmux, have zsh specify the name of the current tmux window and the
+# title of the current tmux pane.
 if ! [ -z $TMUX ]; then
-	# use the current user as the prefix of the current tab title (since that's
-	# fairly important, and I change it fairly often)
-  TAB_TITLE_PREFIX='"${USER}:"'
-	# when at the shell prompt, show a truncated version of the current path (with
-	# standard ~ replacement) as the rest of the title.
-	TAB_TITLE_PROMPT='`echo $PWD | sed "s/^\/Users\//~/;s/^~$USER/~/;s/\/..*\//\/...\//"`'
-	# when running a command, show the title of the command as the rest of the
-	# title (truncate to drop the path to the command)
-	TAB_TITLE_EXEC='$cmd[1]:t'
+  # TODO when switching to tmux-2.3+ use after-select-pane hook to update window name?
+  # TODO set status line background color by git status?
 
-	# use the current path (with standard ~ replacement) in square brackets as the
-	# prefix of the tab window hardstatus.
-	TAB_HARDSTATUS_PREFIX='"[`echo $PWD | sed "s/^\/Users\//~/;s/^~$USER/~/"`] "'
-	# when at the shell prompt, use the shell name (truncated to remove the path to
-	# the shell) as the rest of the title
-	TAB_HARDSTATUS_PROMPT='$SHELL:t'
-	# when running a command, show the command name and arguments as the rest of
-	# the title
-	TAB_HARDSTATUS_EXEC='$cmd'
+  autoload -Uz add-zsh-hook
 
-	# tell tmux what the tab window title ($1) and the hardstatus($2) should be
-  function tmux_set()
-  {
-		#	set the tab window title (%t) for tmux
-		print -nR $'\033k'$1$'\033'\\\
-
-		# set hardstatus of tab window (%h) for tmux
-		print -nR $'\033]0;'$2$'\a'
+  # use the (abbreviated) current path as the tmux window name (#W)
+  # when running a command or at the shell prompt
+  function set-tmux-window-name(){
+    print -n "\ek$(print -D $PWD | sed 's;/.*/;/.../;')\e\\"
   }
-	# called by zsh before executing a command
-  function preexec()
-  {
+  add-zsh-hook preexec set-tmux-window-name
+  add-zsh-hook precmd set-tmux-window-name
+
+  # use the full current path and the shell name as the tmux pane title (#T)
+  # at the shell prompt
+  function set-tmux-pane-title-precmd(){
+    print -n "\e]0;[$(print -D $PWD)] ${SHELL:t}\a"
+  }
+  add-zsh-hook precmd set-tmux-pane-title-precmd
+
+  # use the full current path and command as the tmux pane title (#T)
+  # when running a command
+  function set-tmux-pane-title-preexec(){
 		local -a cmd; cmd=(${(z)1}) # the command string
-		eval "tab_title=$TAB_TITLE_PREFIX$TAB_TITLE_EXEC"
-		eval "tab_hardstatus=$TAB_HARDSTATUS_PREFIX$TAB_HARDSTATUS_EXEC"
-		tmux_set $tab_title $tab_hardstatus
+    print -n "\e]0;[$(print -D $PWD)] $cmd\a"
   }
-	# called by zsh before showing the prompt
-  function precmd()
-  {
-		eval "tab_title=$TAB_TITLE_PREFIX$TAB_TITLE_PROMPT"
-		eval "tab_hardstatus=$TAB_HARDSTATUS_PREFIX$TAB_HARDSTATUS_PROMPT"
-		tmux_set $tab_title $tab_hardstatus
-  }
+  add-zsh-hook preexec set-tmux-pane-title-preexec
 fi
 
 # make ESC-V bring up current line in EDITOR
