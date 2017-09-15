@@ -27,50 +27,50 @@
 #
 # 1) The current directory is ~/Documents, which is not under version control.
 #
-#     prompt: $                                       [~/Documents]
-#     cursor:   ^
+#     prompt: 📁                                       ~/Documents
+#     cursor:    ^
 #
 # 2) The current directory is ~/Projects/foo, which is managed by git. The
 #    GIT_DIR is ~/Projects/foo/.git, the current branch is master, and the
 #    checkout is clean. No action is currently being performed.
 #
-#     prompt: $                             [~/Projects/foo#master]
-#     cursor:   ^
+#     prompt: 📁                             ~/Projects/foo#master
+#     cursor:    ^
 #
 # 3) The current directory is ~/Projects/foo/bar/baz, which is managed by git.
 #    The GIT_DIR is ~/Projects/foo/.git, the current branch is master, and the
 #    checkout is clean. No action is currently being performed.
 #
-#     prompt: $                     [~/Projects/foo#master/bar/baz]
-#     cursor:   ^
+#     prompt: 📁                     ~/Projects/foo#master/bar/baz
+#     cursor:    ^
 #
 # 3) The current directory is ~/Projects/foo/bar/baz, which is managed by git.
 #    The GIT_DIR is ~/Projects/foo/.git, the current branch is master, and the
 #    checkout is clean. A `git rebase -i` is underway.
 #
-#     prompt: $           [~/Projects/foo#master(rebase-i)/bar/baz]
-#     cursor:   ^
+#     prompt: ✅          ~/Projects/foo#master(rebase-i)/bar/baz
+#     cursor:    ^
 #
 # 4) The current directory is ~/Projects/foo, which is managed by git. The
 #    GIT_DIR is ~/Projects/foo/.git, the current branch is master, and the
 #    checkout is contains unstaged changes.
 #
-#     prompt: @                             [~/Projects/foo#master]
-#     cursor:   ^
+#     prompt: ⛔️                            ~/Projects/foo#master
+#     cursor:    ^
 #        
 # 5) The current directory is ~/Projects/foo, which is managed by git. The
 #    GIT_DIR is ~/Projects/foo/.git, the current branch is master, and the
 #    checkout is contains staged changes.
 #
-#     prompt: &                             [~/Projects/foo#master]
-#     cursor:   ^
+#     prompt: ⚠️                             ~/Projects/foo#master
+#     cursor:    ^
 #
 # 6) The current directory is ~/Documents, which is not under version control.
 #    The previous command, "foo -n bar", returned 5.
 #
-#     prompt:   $?=5 foo -n bar                               ERROR 
-#             $                                       [~/Documents]
-#     cursor:   ^
+#     prompt:   $?=5 foo -n bar                              ERROR 
+#             📁                                       ~/Documents
+#     cursor:    ^
 
 
 
@@ -97,7 +97,7 @@ setopt prompt_subst
 #   $(($COLUMNS-6)      - arithmetic expansion, six less than the number of columns in the terminal (leave room for "ERROR ")
 #   %?                  - the return status of the prior command
 #   %F{white}...%f      - print ... in white
-#   $(history -n -1 | sed "s/[)%]/%&/g" )
+#   $(history -n -1 | sed "s/[)%]/%&/g")
 #                       - command expansion, the previous command, with special characters escaped
 #   ${(l:COLUMNS:)}     - parameter expansion, $COLUMN characters of whitespace
 #
@@ -106,7 +106,7 @@ setopt prompt_subst
 #   %F{${vcs_info_msg_0_}}...%f   - print ... using the color given by $vcs_info_msg_0_
 #   %(!,#,${vcs_info_msg_1_})     - print '#' if root or $vcs_info_msg_1_' if a normal user
 #
-export PROMPT=$'%(?::%B%F{11}%K{196}%(?::%$(($COLUMNS-6))>>  \\$?=%? %F{white}$(history -n -1 | sed "s/[)%]/%&/g")%f%F{11}${(l:COLUMNS:)})ERROR %b%f%k\n)%F{${vcs_info_msg_0_}}%(!,# ,%{${vcs_info_msg_1_} %G%G%})%f '
+export PROMPT=$'%(?::%B%F{11}%K{196}%(?::%$(($COLUMNS-6))>>  \\$?=%? %F{white}$(history -n -1 | sed "s/[)%]/%&/g")%f%F{11}${(l:COLUMNS:)})ERROR %b%f%k\n)%F{${vcs_info_msg_0_}}%(!,# ,%{${vcs_info_msg_1_}%G%G%})%f '
 
 # RPROMPT:
 #   $'...'              - render escapes in ...
@@ -114,13 +114,12 @@ export PROMPT=$'%(?::%B%F{11}%K{196}%(?::%$(($COLUMNS-6))>>  \\$?=%? %F{white}$(
 #   Use the full line to display status information, so that any typing at all will hide it.
 #
 #   %N>>...             - truncate ... on the right after N characters
-#   $(($COLUMNS-5)      - arithmetic expansion, five less than the number of columns in the terminal 
+#   $(($COLUMNS-5)      - arithmetic expansion, four less than the number of columns in the terminal 
 #                         (two columns for the glyph, one for a space after the glyph, one for the cursor
 #                         and one for the space after the RPROMPT)
 #   ${(l:$COLUMNS:)}    - left-pad the rest of the RPROMPT by $COLUMNS spaces. These will be truncated
 #                         by the %N>> so that they *just barely* fill up the prompt. As soon as anything
 #                         is typed, they will be overlapped, which will cause the RPROMPT to disappear.
-#   %F{magenta}...%f    - print [ and ] in magenta text
 #   %F{14}${vcs_info_msg_2_}%f
 #                       - print the text of $vcs_info_msg_2_ in light cyan
 #
@@ -163,12 +162,25 @@ zstyle ':vcs_info:*' unstagedstr '1'
 #     %S  - subdirectory w/in git project
 #     %~  - current working directory, using ~ for $HOME
 zstyle ':vcs_info:*' max-exports 3
-# used when vcs detected
-zstyle ':vcs_info:*' formats '%1(c:11:%1(u:9:10))' '%1(c:⚠️:%1(u:⛔️:✅))' '%R%F{%1(c:11:%1(u:9:10))}#%b%f%F{14}%S'
-# used during rebase/merge/etc
-zstyle ':vcs_info:*' actionformats '%1(c:11:%1(u:9:10))' '%1(c:⚠️}:%1(u:⛔️:✅))' '%R%F{%1(c:11:%1(u:9:10))}#%b%f%F{white}(%a)%f%F{14}%S'
+
 # used when no vcs detected (bug in zsh-5.2, upgrade to fix)
-zstyle ':vcs_info:*' nvcsformats '245' '📁' '%~'
+zstyle ':vcs_info:*' nvcsformats '245' $'\U1f4c1 ' '%~'
+
+FORMAT_GLYPH_COLOR="%1(c:11:%1(u:9:10))"
+if [[ -v TMUX ]]; then
+  # inside tmux-2.5, zsh-5.4.1 prints \Ufe0f as 1 character wide in the prompt for some reason
+  FORMAT_GLYPH=$'%1(c:\U26a0\Ufe0f:%1(u:\U26d4 :\U2705 ))'
+else
+  FORMAT_GLYPH=$'%1(c:\U26a0\Ufe0f :%1(u:\U26d4 :\U2705 ))'
+fi
+FORMAT_RPROMPT="%R%F{$FORMAT_GLYPH_COLOR}#%b%f%(a::%F{magenta}(%a%))%f%F{14}%S"
+
+# used when vcs detected
+zstyle ':vcs_info:*' formats $FORMAT_GLYPH_COLOR $FORMAT_GLYPH $FORMAT_RPROMPT
+# used during rebase/merge/etc
+zstyle ':vcs_info:*' actionformats $FORMAT_GLYPH_COLOR $FORMAT_GLYPH $FORMAT_RPROMPT
+
+unset FORMAT_GLYPH FORMAT_GLYPH_COLOR FORMAT_RPROMPT
 
 # register hooks to tweak values passed to formats
 zstyle ':vcs_info:*+start-up:*' hooks zshprompt-start-up
