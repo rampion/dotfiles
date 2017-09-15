@@ -42,6 +42,16 @@ setopt histverify
 # The  file will still be periodically re-written to trim it when the number of lines grows 20%
 setopt incappendhistory
 
+# include aborted commands in history
+function _add_aborted_commands_to_history(){
+  if [[ -v ZLE_LINE_ABORTED ]]; then
+    print -S "$ZLE_LINE_ABORTED"
+    unset ZLE_LINE_ABORTED
+  fi
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _add_aborted_commands_to_history
+
 if [[ $USER != "root" ]]; then
   HISTFILE="$HOME/.zsh_history"
   HISTSIZE=9999

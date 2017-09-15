@@ -106,16 +106,17 @@ setopt prompt_subst
 #   %F{${vcs_info_msg_0_}}...%f   - print ... using the color given by $vcs_info_msg_0_
 #   %(!,#,${vcs_info_msg_1_})     - print '#' if root or $vcs_info_msg_1_' if a normal user
 #
-export PROMPT=$'%(?::%B%F{11}%K{196}%(?::%$(($COLUMNS-6))>>  \\$?=%? %F{white}$(history -n -1 | sed "s/[)%]/%&/g" )%f%F{11}${(l:COLUMNS:)})ERROR %b%f%k\n)%F{${vcs_info_msg_0_}}%(!,#,${vcs_info_msg_1_})%f '
+export PROMPT=$'%(?::%B%F{11}%K{196}%(?::%$(($COLUMNS-6))>>  \\$?=%? %F{white}$(history -n -1 | sed "s/[)%]/%&/g")%f%F{11}${(l:COLUMNS:)})ERROR %b%f%k\n)%F{${vcs_info_msg_0_}}%(!,# ,%{${vcs_info_msg_1_} %G%G%})%f '
 
-# RPROMPT key:
+# RPROMPT:
 #   $'...'              - render escapes in ...
 #   
 #   Use the full line to display status information, so that any typing at all will hide it.
 #
 #   %N>>...             - truncate ... on the right after N characters
-#   $(($COLUMNS-4)      - arithmetic expansion, four less than the number of columns in the terminal 
-#                         (leave room for "$ ", the cursor, and a space on the right)
+#   $(($COLUMNS-5)      - arithmetic expansion, five less than the number of columns in the terminal 
+#                         (two columns for the glyph, one for a space after the glyph, one for the cursor
+#                         and one for the space after the RPROMPT)
 #   ${(l:$COLUMNS:)}    - left-pad the rest of the RPROMPT by $COLUMNS spaces. These will be truncated
 #                         by the %N>> so that they *just barely* fill up the prompt. As soon as anything
 #                         is typed, they will be overlapped, which will cause the RPROMPT to disappear.
@@ -123,7 +124,7 @@ export PROMPT=$'%(?::%B%F{11}%K{196}%(?::%$(($COLUMNS-6))>>  \\$?=%? %F{white}$(
 #   %F{14}${vcs_info_msg_2_}%f
 #                       - print the text of $vcs_info_msg_2_ in light cyan
 #
-export RPROMPT=$'%$((COLUMNS-4))<<${(l:$COLUMNS:)}%F{magenta}[%F{14}${vcs_info_msg_2_}%f%F{magenta}]%f'
+export RPROMPT=$'%$((COLUMNS-5))<<${(l:$COLUMNS:)}%F{245}${vcs_info_msg_2_}%f'
 
 # to populate the vcs_info_msg_*_ variables, we need to run the vcs_info function before the prompt
 # renders (precmd)
@@ -144,7 +145,7 @@ zstyle ':vcs_info:*' unstagedstr '1'
 #
 #   vcs_info_msg_0_ - the glyph color
 #     11 (yellow)   - staged changes
-#     208 (orange)  - unstaged changes
+#     9 (red)       - unstaged changes
 #     10 (green)    - clean checkout
 #     245 (gray)    - not under version control
 #
@@ -163,11 +164,11 @@ zstyle ':vcs_info:*' unstagedstr '1'
 #     %~  - current working directory, using ~ for $HOME
 zstyle ':vcs_info:*' max-exports 3
 # used when vcs detected
-zstyle ':vcs_info:*' formats '%1(c:11:%1(u:208:10))' '%1(c:&:%1(u:@:%%%%))' '%R%F{%1(c:11:%1(u:208:10))}#%b%f%F{14}%S'
+zstyle ':vcs_info:*' formats '%1(c:11:%1(u:9:10))' '%1(c:⚠️:%1(u:⛔️:✅))' '%R%F{%1(c:11:%1(u:9:10))}#%b%f%F{14}%S'
 # used during rebase/merge/etc
-zstyle ':vcs_info:*' actionformats '%1(c:11:%1(u:208:10))' '%1(c:&:%1(u:@:%%%%))' '%R%F{%1(c:11:%1(u:208:10))}#%b%f%F{white}(%a)%f%F{14}%S'
+zstyle ':vcs_info:*' actionformats '%1(c:11:%1(u:9:10))' '%1(c:⚠️}:%1(u:⛔️:✅))' '%R%F{%1(c:11:%1(u:9:10))}#%b%f%F{white}(%a)%f%F{14}%S'
 # used when no vcs detected (bug in zsh-5.2, upgrade to fix)
-zstyle ':vcs_info:*' nvcsformats '245' '$' '%~'
+zstyle ':vcs_info:*' nvcsformats '245' '📁' '%~'
 
 # register hooks to tweak values passed to formats
 zstyle ':vcs_info:*+start-up:*' hooks zshprompt-start-up
