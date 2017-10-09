@@ -1,4 +1,19 @@
-# loaded by all shells, but not scripts
+# From `man zshall`:
+#
+#   Commands are first read from /etc/zshenv [...]
+#
+#   Commands are then read from $ZDOTDIR/.zshenv. If the shell is a login
+#   shell, commands are read from /etc/zprofile and then $ZDOTDIR/.zprofile.
+#   Then, if the shell is interactive, commands are read from /etc/zshrc and
+#   then $ZDOTDIR/.zshrc. Finally, if the shell is a login shell, /etc/zlogin
+#   and $ZDOTDIR/.zlogin are read.
+#
+# By default, tmux runs all shells as login shells, making zprofile/zlogin less
+# useful for my needs.
+
+# /etc/zprofile runs /usr/libexec/path_helper, which clobbers the PATH settings
+# from ~/.zshenv, so they need to be fixed
+. ~/.zshpath
 
 # enable completion
 autoload -U compinit

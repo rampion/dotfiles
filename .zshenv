@@ -2,20 +2,10 @@
 export PYTHON_ROOT=~/Library/Python/2.7
 export GOPATH=~/Documents/Code/Go
 
-export PATH=\
-${HOME}/.cabal/bin:\
-${HOME}/.local/bin:\
-/usr/local/bin:\
-$HOME/Library/Haskell/bin:\
-$HOME/.cargo/bin:\
-$PATH:\
-$PYTHON_ROOT/bin:\
-$HOME/.rvm/bin:\
-/usr/local/opt/ruby/bin:\
-/usr/local/share/npm/bin:\
-/opt/local/bin:\
-/usr/bin:\
-$GOPATH/bin
+# use `dotfiles` alias to manage all ~/.* files 
+alias dotfiles='git --git-dir=$HOME/.files --work-tree=$HOME'
+
+. $HOME/.zshpath
 
 export MANPATH=/opt/local/man/:$MANPATH
 
