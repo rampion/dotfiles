@@ -65,6 +65,11 @@ set smartindent
 " jumping to errors reuses open windows, or uses a new tab
 set switchbuf=newtab,usetab
 
+" by default, only pay attention to case when matching patterns
+" if the pattern contains a capital letter
+set ignorecase
+set smartcase
+
 " use <Space> as <Leader> for custom mappings
 let maplocalleader = " "
 let mapleader = " "
