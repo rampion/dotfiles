@@ -74,6 +74,7 @@ set smartcase
 " use <Space> as <Leader> for custom mappings
 let maplocalleader = " "
 let mapleader = " "
+nnoremap <Space> <Nop>
 
 " use <Tab>/<S-Tab> to switch between tabs
 nnoremap <Tab> :tabnext<CR>
