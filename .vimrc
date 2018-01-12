@@ -16,7 +16,7 @@ if isdirectory($HOME . '/.vim/bundle/neobundle.vim') ||
   NeoBundle	'https://github.com/bitc/vim-hdevtools.git'
   NeoBundle	'https://github.com/cespare/vim-toml.git'
   NeoBundle	'https://github.com/HerringtonDarkholme/yats.vim.git'
-  NeoBundle	'https://github.com/valloric/youcompleteme'
+  " NeoBundle	'https://github.com/valloric/youcompleteme'
   NeoBundle 'https://github.com/vim-perl/vim-perl6'
   call neobundle#end()
 
