@@ -1,0 +1,282 @@
+# Create a custom dual-sided prompt, with a glyph on the left indicating
+# the version control state and more information on the right that
+# vanishes when anything is typed at the prompt.
+#
+# If the previous command returned nonzero, a header line
+# displays the error code.
+#
+# In the HOME directory, as a special case, it will
+# use ~/.files as the GIT_DIR.
+#
+# Since the actual glyphs may change frequently due to user preferences,
+# the following examples use these glyphs:
+#
+#   $ (gray)    - the current directory is not tracked by git
+#   % (green)   - the git checkout is clean
+#   @ (orange)  - the git checkout contains unstaged changes/files
+#   & (yellow)  - the git checkout contains staged changes/files
+#   #           - the user is root, color as above.
+#
+# On the right-hand-side is listed:
+#
+#   - the root of the current git repos (cyan)
+#   - the current branch name (color matches the glyph, bold)
+#   - the current git action (if any) (white, bold)
+#   - the subdirectory within the repos (cyan)
+#
+# Examples:
+#
+# 1) The current directory is ~/Documents, which is not under version control.
+#
+#     prompt: $                                       ~/Documents
+#     cursor:   ^
+#
+# 2) The current directory is ~/Projects/foo, which is managed by git. The
+#    GIT_DIR is ~/Projects/foo/.git, the current branch is master, and the
+#    checkout is clean. No action is currently being performed.
+#
+#     prompt: ^                             ~/Projects/foo#master
+#     cursor:   ^
+#
+# 3) The current directory is ~/Projects/foo/bar/baz, which is managed by git.
+#    The GIT_DIR is ~/Projects/foo/.git, the current branch is master, and the
+#    checkout is clean. No action is currently being performed.
+#
+#     prompt: %                     ~/Projects/foo#master/bar/baz
+#     cursor:   ^
+#
+# 3) The current directory is ~/Projects/foo/bar/baz, which is managed by git.
+#    The GIT_DIR is ~/Projects/foo/.git, the current branch is master, and the
+#    checkout is clean. A `git rebase -i` is underway.
+#
+#     prompt: %     ~/Projects/foo#master(rebase-i)/bar/baz
+#     cursor:   ^
+#
+# 4) The current directory is ~/Projects/foo, which is managed by git. The
+#    GIT_DIR is ~/Projects/foo/.git, the current branch is master, and the
+#    checkout is contains unstaged changes.
+#
+#     prompt: @                           ~/Projects/foo#master
+#     cursor:   ^
+#        
+# 5) The current directory is ~/Projects/foo, which is managed by git. The
+#    GIT_DIR is ~/Projects/foo/.git, the current branch is master, and the
+#    checkout is contains staged changes.
+#
+#     prompt: &                             ~/Projects/foo#master
+#     cursor:   ^
+#
+# 6) The current directory is ~/Documents, which is not under version control.
+#    The previous command, "foo -n bar", returned 5.
+#
+#     prompt:   $?=5 foo -n bar                              ERROR 
+#             $                                       ~/Documents
+#     cursor:   ^
+#
+#
+# Some possible glyphs
+#
+#     untracked:
+#       §
+#       ¶
+#       ¶
+#       §
+#       ↩️
+#     
+#     clean:
+#       ✓
+#       ★
+#       ♥
+#       ∀
+#       ↺
+#       ↻
+#       ▶
+#       💙
+#       ✅
+#       ✔️
+#       ▪️
+#       ⬛️
+#     
+#     staged:
+#       ◆
+#       ∃
+#       💔
+#       ⁉️
+#     
+#     unstaged:
+#       ⚫️
+#       ●
+#       ¬
+#       ∅
+#       ☢
+#       ⛔️
+#       ❌
+#       ‼️
+#       ❎
+#       ✖️
+
+
+
+# I want pretty colors
+export TERM=screen-256color
+
+# Needed to expand ${..} sequences in PROMPT/RPROMPT at render time
+# for vcs_info-populated variables and to adjust left-padding to fit
+# terminal width.
+setopt prompt_subst
+
+# PROMPT:
+#   $'...'              - render escapes in ...
+#
+#   The first line is only printed when there is an error (non-zero exit code)
+#   and contains "\$?=$?  {previous command} ...   ERROR " in yellow text on a
+#   red background wide  enough to fill the entire terminal.
+#
+#   %(?::...)           - print ... if $? != 0
+#   %B...%b             - print ... in bold 
+#   %F{11}...%f         - print ... in bright yellow text
+#   %K{196}...%k        - print ... on a bright red background
+#   %(?::%N>>...)       - truncate ... on the right after N characters
+#   $(($COLUMNS-6)      - arithmetic expansion, six less than the number of
+#                         columns in the terminal (leave room for "ERROR ")
+#   %?                  - the return status of the prior command
+#   %F{white}...%f      - print ... in white
+#   $(history -n -1 | sed "s/[)%]/%&/g")
+#                       - command expansion, the previous command, with special
+#                         characters escaped
+#   ${(l:COLUMNS:)}     - parameter expansion, $COLUMN characters of whitespace
+#
+#   The last line gets the glyph and glyph color from the results of running vcs_info.
+#
+#   %F{${vcs_info_msg_0_}}...%f   - print ... using the color given by $vcs_info_msg_0_
+#   %(!,#,${vcs_info_msg_1_})     - print '#' if root or $vcs_info_msg_1_' if a normal user
+#
+# Test via `print -P $'...'`
+export PROMPT=$'%(?::%B%F{11}%K{196}%(?::%$(($COLUMNS-6))>>  \\$?=%? %F{white}$(history -n -1 | sed "s/[)%]/%&/g")%f%F{11}${(l:COLUMNS:)})ERROR %b%f%k\n)%F{${vcs_info_msg_0_}}%(!,#,${vcs_info_msg_1_})%f '
+
+# RPROMPT:
+#   $'...'              - render escapes in ...
+#   
+#   Use the full line to display status information, so that any typing at all will hide it.
+#
+#   %N<<...             - truncate ... on the left after N characters
+#   $(($COLUMNS-4)      - arithmetic expansion, four less than the number of
+#                         columns in the terminal (one column for the glyph,
+#                         one for a space after the glyph, one for the cursor
+#                         and one for the space after the RPROMPT)
+#   ${(l:$COLUMNS:)}    - left-pad the rest of the RPROMPT by $COLUMNS spaces.
+#                         These will be truncated by the %N<< so that they
+#                         *just barely* fill up the prompt. As soon as anything
+#                         is typed, they will be overlapped, which will cause
+#                         the RPROMPT to disappear.
+#   %F{14}${vcs_info_msg_2_}%f
+#                       - print the text of $vcs_info_msg_2_ in light cyan
+#
+# Test via `print -P $'...'`
+export RPROMPT=$'%$((COLUMNS-4))<<${(l:$COLUMNS:)}%F{245}${vcs_info_msg_2_}%f'
+
+# to populate the vcs_info_msg_*_ variables, we need to run the vcs_info
+# function before the prompt renders (precmd)
+autoload -Uz vcs_info add-zsh-hook
+add-zsh-hook precmd vcs_info
+
+zstyle ':vcs_info:*' enable git 
+# vcs_info doesn't check for changes by default, it must be told to
+zstyle ':vcs_info:*' check-for-changes true
+
+# just use "1" or "" when detecting staged/unstaged changes, so we can use the
+# %N(x:if-true:if-false) construct
+# (renders if-true when %X = N, renders if-false otherwise)
+zstyle ':vcs_info:*' stagedstr '1'
+zstyle ':vcs_info:*' unstagedstr '1'
+
+# the formats are what determine the vcs_info_msg_*_ variables content
+#
+#   vcs_info_msg_0_ - the glyph color
+#     11 (yellow)   - staged changes
+#     9 (red)       - unstaged changes
+#     10 (green)    - clean checkout
+#     245 (gray)    - not under version control
+#
+#   vcs_info_msg_1_ - the glyph
+#     ● - staged changes
+#     ● - unstaged changes
+#     ● - clean checkout
+#     ● - not under version control
+#
+#   vcs_info_msg_2_ - RPROMPT info
+#     %R  - base of git project
+#     %b  - git branch name
+#     %%b - expands to %b (close bold)
+#     %a  - action name
+#     %S  - subdirectory w/in git project
+#     %~  - current working directory, using ~ for $HOME
+zstyle ':vcs_info:*' max-exports 3
+
+# used when no vcs detected (bug in zsh-5.2, upgrade to fix)
+zstyle ':vcs_info:*' nvcsformats '245' $'●' '%~'
+
+FORMAT_GLYPH_COLOR="%1(c:11:%1(u:9:10))"
+FORMAT_GLYPH=$'●'
+FORMAT_RPROMPT="%R%F{$FORMAT_GLYPH_COLOR}#%b%f%(a::%F{magenta}(%a%))%f%F{14}%S"
+
+# used when vcs detected
+zstyle ':vcs_info:*' formats $FORMAT_GLYPH_COLOR $FORMAT_GLYPH $FORMAT_RPROMPT
+# used during rebase/merge/etc
+zstyle ':vcs_info:*' actionformats $FORMAT_GLYPH_COLOR $FORMAT_GLYPH $FORMAT_RPROMPT
+
+unset FORMAT_GLYPH FORMAT_GLYPH_COLOR FORMAT_RPROMPT
+
+# register hooks to tweak values passed to formats
+zstyle ':vcs_info:*+start-up:*' hooks zshprompt-start-up
++vi-zshprompt-start-up(){
+  # if in ~, use dotfiles' GIT_DIR
+  if [ $HOME = $PWD ] ; then
+    if (( ${+GIT_DIR} )) ; then
+      user_data[git_dir]=$GIT_DIR
+    fi
+    export GIT_DIR=$HOME/.files
+    if (( ${+GIT_WORK_TREE} )) ; then
+      user_data[git_work_tree]=$GIT_WORK_TREE
+    fi
+    export GIT_WORK_TREE=$HOME
+  fi
+}
+
+zstyle ':vcs_info:*+post-backend:*' hooks zshprompt-post-backend
++vi-zshprompt-post-backend(){
+  if (( ${+hook_com[base]} )) ; then
+    # abbreviate the base directory using ~ for $HOME
+    hook_com[base]=$(print -rD ${hook_com[base]});
+
+    # abbreviate the subdirectory using "" for .
+    if [ "${hook_com[subdir]}" = "." ] ; then
+      hook_com[subdir]=""
+    else
+      hook_com[subdir]="/${hook_com[subdir]}"
+    fi
+
+    # mark untracked files as "unstaged changes" (by default only
+    # changed tracked files count)
+    # (stolen from https://github.com/zsh-users/zsh/blob/master/Misc/vcs_info-examples#L161)
+    if git status --porcelain | grep '??' &> /dev/null ; then
+      hook_com[unstaged]='1'
+    fi
+  fi
+
+  # restore the GIT_DIR if overridden
+  # since environment variables set here
+  # are visible at the prompt
+  if [ $HOME = $PWD ] ; then
+    if (( ${+user_data[git_dir]} )) ; then
+      export GIT_DIR=${user_data[git_dir]}
+    else
+      unset GIT_DIR
+    fi
+    if (( ${+user_data[git_work_tree]} )) ; then
+      export GIT_WORK_TREE=${user_data[git_work_tree]}
+    else
+      unset GIT_WORK_TREE
+    fi
+  fi
+}

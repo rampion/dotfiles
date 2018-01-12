@@ -1,5 +1,6 @@
-*~
-*.o
-*.hi
-.sw?
+# global .gitignores file set in ~/.gitconfig
 .*.sw?
+.sw?
+*.o
+*~
+.DS_Store

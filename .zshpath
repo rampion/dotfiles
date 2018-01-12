@@ -1,0 +1,15 @@
+# use `-U` to remove dupes
+export -U PATH=\
+${HOME}/.cabal/bin:\
+${HOME}/.local/bin:\
+/usr/local/bin:\
+$HOME/Library/Haskell/bin:\
+$HOME/.cargo/bin:\
+$PYTHON_ROOT/bin:\
+$HOME/.rvm/bin:\
+/usr/local/opt/ruby/bin:\
+/usr/local/share/npm/bin:\
+/opt/local/bin:\
+/usr/bin:\
+$GOPATH/bin:\
+$PATH
