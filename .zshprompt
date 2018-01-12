@@ -137,8 +137,10 @@ setopt prompt_subst
 #   %F{11}...%f         - print ... in bright yellow text
 #   %K{196}...%k        - print ... on a bright red background
 #   %(?::%N>>...)       - truncate ... on the right after N characters
-#   $(($COLUMNS-6)      - arithmetic expansion, six less than the number of
+#   $(($COLUMNS-6+2))   - arithmetic expansion, six less than the number of
 #                         columns in the terminal (leave room for "ERROR ")
+#                         XXX: plus two from zsh erroneously counting %F as 
+#                         one character wide
 #   %?                  - the return status of the prior command
 #   %F{white}...%f      - print ... in white
 #   $(history -n -1 | sed "s/[)%]/%&/g")
@@ -152,7 +154,7 @@ setopt prompt_subst
 #   %(!,#,${vcs_info_msg_1_})     - print '#' if root or $vcs_info_msg_1_' if a normal user
 #
 # Test via `print -P $'...'`
-export PROMPT=$'%(?::%B%F{11}%K{196}%(?::%$(($COLUMNS-6))>>  \\$?=%? %F{white}$(history -n -1 | sed "s/[)%]/%&/g")%f%F{11}${(l:COLUMNS:)})ERROR %b%f%k\n)%F{${vcs_info_msg_0_}}%(!,#,${vcs_info_msg_1_})%f '
+export PROMPT=$'%(?::%B%K{196}%(?::%$(($COLUMNS-6+2))>>  %F{11}\\$?=%? %F{white}$(history -n -1 | sed "s/[)%]/%&/g")${(l:COLUMNS:)})%F{11}ERROR %f%b%k\n)%F{${vcs_info_msg_0_}}%(!,#,${vcs_info_msg_1_})%f '
 
 # RPROMPT:
 #   $'...'              - render escapes in ...
