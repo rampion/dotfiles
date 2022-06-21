@@ -1,95 +1,441 @@
 source $VIMRUNTIME/vimrc_example.vim
 
-if isdirectory($HOME . '/.vim/bundle/neobundle.vim') || 
-      \ system('git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim')
-
-  " manage bundles with NeoBundle
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
-    
-  filetype plugin indent on " will be reset by neobundle#begin
-
-  call neobundle#begin(expand('~/.vim/bundle/'))
-  NeoBundleFetch 'Shougo/neobundle.vim'
-  NeoBundle	'https://github.com/rust-lang/rust.vim.git'
-  NeoBundle	'https://github.com/scrooloose/syntastic.git'
-  NeoBundle	'https://github.com/tpope/vim-fugitive.git'
-  NeoBundle	'https://github.com/bitc/vim-hdevtools.git'
-  NeoBundle	'https://github.com/cespare/vim-toml.git'
-  NeoBundle	'https://github.com/HerringtonDarkholme/yats.vim.git'
-  NeoBundle	'https://github.com/valloric/youcompleteme'
-  NeoBundle 'https://github.com/vim-perl/vim-perl6'
-  call neobundle#end()
-
-  " If there are uninstalled bundles found on startup,
-  " this will conveniently prompt you to install them.
-  NeoBundleCheck
+" Assume terminals that advertise 256 colors can handle truecolor (256^3 colors)
+if $TERM =~ "-256color"
+  let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
+  let %t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
+  set termguicolors
 endif
 
-" see |:help vimrc-filetype|
-" (enable filetype detection, indenting, and plugins)
-filetype plugin indent on
+set background=dark
+colorscheme gruvbox
+let g:gruvbox_sign_column="bg0"
+let g:gruvbox_contrast_dark="medium"
 
-syntax on " enable syntax coloring by default
+hi Normal ctermbg=NONE guibg=NONE
+hi NonText ctermbg=NONE guibg=NONE
+hi Terminal guibg=#000000
 
-colo desert " a slightly more muted colorscheme
+set cindent
 
-" two space indent by default
-set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+" don't display '\t' characters, use two ' ' instead
+set tabstop=2
+don't leave them as tabs in the file
+set expandtab
+" shift left or right by two ' ' characters when using < or > commands
+set shiftwidth=2
+" you can hit backspace to jump back two ' ' characters in insert mode (as if deleting a single tab).  the x command still deletes a single ' ' though.
+set softtabstop=2
 
-" put timestamped backup copies of files in ~/.vim/backup
-let &backupdir = $HOME . "/.vim/backup"
-if isdirectory( &backupdir ) == 0
-  call mkdir(&backupdir, "p")
-  " clean the directory weekly with crontab
-  call system('(crontab -l ; echo "''@midnight find '.&backupdir.' -not -newerat "1 week ago" -delete'')" | crontab -')
-endif
-au BufWritePre * let &backupext = ' ' . substitute(expand('%:p:h'),'/',':', 'g') . ' ' . strftime("%Y.%m.%d %H:%M:%S")
+" set the text width
+set tw=80
+" c: automatically wrap comments
+" q: allow rewrapping of comments w/ gq
+" r: automatically insert comment character
+" l: don't break previously long lines
+set formatoptions=cqrlo
 
-" check top/bottom two lines for vim commands
-set modeline modelines=2
+" show the line numbers in-line
+set number
 
-" display line numbers relative to cursor position
-set number relativenumber
+" statusline moved to ~/.vim/plugin/statusline.vim
 
-" disable wrapping and indicate sidescrolling
-set nowrap sidescroll=5 listchars+=precedes:↩,extends:↪
-
-" enable per-project .vimrc
-set exrc secure
-
-" complete ex-commands by longest common substring, then show a list
-set wildmode=list:longest,full
-
-" yay for auto-indentation in programming languages
-set smartindent
-
-" jumping to errors reuses open windows, or uses a new tab
-set switchbuf=newtab,usetab
-
-" by default, only pay attention to case when matching patterns
-" if the pattern contains a capital letter
+" ignore case in string matching, unless one of the characters is uppercase
 set ignorecase
 set smartcase
 
-" use <Space> as <Leader> for custom mappings
-let maplocalleader = " "
-let mapleader = " "
-nnoremap <Space> <Nop>
+" don't highlight matching parens - takes too long
+let loaded_matchparen = 1 "  help matchparen
 
-" use <Tab>/<S-Tab> to switch between tabs
-nnoremap <Tab> :tabnext<CR>
-nnoremap <S-Tab> :tabprevious<CR>
+" don't print line numbers for TOhtml, by default
+let html_number_lines = 0
 
-" easily make / make build / make test
+" When editing a crontab file, set backupcopy to yes, rather than auto. See :help crontab and bug #53437
+autocmd FileType crontab set backupcopy=yes
+autocmd FileType dot set backupcopy=yes
+
+" use "Space" for leader
+let mapleader=" "
+
+" jrpat4's trick for listing current buffers
+map <Leader>b :ls<cr>:b
+
+augroup backup
+  " Save backups of files in a parallel tree under ~/.backup, with each version
+  " tagged with the date and time.
+  
+  " Make sureto have a cronjob or something regulalrly clear out stale entries
+  " ie `find ~/.backup -not -newerat "1 month ago" -delete`
+  
+  " We could instead use `~/.backup//` to store all the backups in a flat
+  " directory with using an escaped full path as the backup file name (/'/ -> '%'),
+  " but that fails when the file's path is very long (looking at you heavily
+  " nested java source trees
+  au BufWritePre *
+        \ let &l:backupext=strftime(";%FT%T") |
+        \ let &l:backupdir=$HOME.'/.backup'.expand("%:p:h") |
+        \ echo system("mkdir -p " . &backupdir)
+augroup END
+
+" match last yanked or deleted text
+nnoremap ,/ /\V<C-R> =substitute
+      \substitute(getreg('"'), "[\\/]", '\\\0', 'g')
+      \, "\n", '\\n', 'g')<CR><CR><CR>
+
+" use & to add words to the current search pattern
+nnoremap & :let @/.='\\|\<'.expand("<cword>").'\>'<CR>
+
+" use <Tab> to tab through jumplist
+nnoremap <S-Tab> <C-O>
+
+" use <C-W>vf to open the file under the cursor in a new (vertical) window
+nnoremap <C-W>vf :vertical wincmd f<CR>
+
+" always show a status line
+set laststatus=2
+
+" use K to open man pages in a new vim window, rather than in a pager (default)
+let $GROFF_NO_SGR=1 " see man grotty
+source $VIMRUNTIME/ftplugin/man.vim
+set keywordprg=:Man
+
+" auto fold stuff by indent
+set foldmethod=indent
+set foldlevelstart=99
+
+" highlight columns past 80
+highlight ColorColumn ctermbg=magenta
+function EnableEightyColumnLimit()
+  let w:eighty_column_match = matchadd('ColorColumn', '\%51v.\+', 100)
+endfunction
+function ToggleEightColumnLimit()
+  if exists ('w:eighty_column_match')
+    call matchdelete(w:eighty_column_match)
+    unlet w:eighty_column_match
+  else
+    call EnableEightyColumnLimit()
+  endif
+endfunction
+command ToggleEightyColumnLimit :call ToggleEightyColumnLimit()
+
+" highlight tabs and trailing spaces
+set listchars=tab:⟥⟞,trail:∙
+set list
+
+set modeline
+set modelines=1
+
+" set completion options to automatically list available completions
+set wildmenu
+set wildmode=lastused:full
+
+" use SPACE-p to toggle between paste/nopaste
+nnoremap <Leader>p :set paste! paste?<CR>
+" use SPACE-s to see the syntax group of the item under the cursor
+nnoremap <Leader>s :echo
+      \ 'hi<'.synIDattr(synID(line("."),col("."),1),"name").'> '.
+      \ 'trans<'.synIDattr(synID(line(".",col("."),0),"name").'> '.
+      \ 'lo<' .synIDattr(synIDtrans(synID(line("."),col("."),1)),"name").'>'<CR>
+
+" useful for escaping code for html
+" %s/[<>%]/\html_escapes(submatch(0))/g
+let html_escapes={'<':&lt;','>':&gt;','&':'&amp;'}
+command -range EscapeTags <line1>,<line2>s/[<>%]/\=html_escapes[submatch(0)]/g
+
+" templates for blank files (:help template)
+au BufNewFile *.{htm,html} r ~/.vim/templates/skeleton.html | 1d
+au BufNewFile ~/Documents/wiki/diary/\d\d\d\d-\d\d-\d\d.md let @/='<\%(START\|END\|ELAPSED\)>' | call setline(1, strftime("# %Y-%m-%d %9A <START>-<END> (<ELAPSED>hrs RG)", strptime("%Y-%m-%d", expand("%:t:r"))))
+
+" let vim unload memory used for buffers not currently being displayed
+set nohidden
+
+" but completely close ones from fugitive
+au BufReadPost fugitive://* setlocal bufhidden=wipe
+
+" and empty unnamed buffers
+"
+" uses setbufvar() rather than `set` because `set` affects the buffer
+" that was in focus when the new buffer was created, not the new buffer)
+autocmd! BufNew {} call setbufvar(str2nr(expand("<abuf>")), "&bufhidden", "wipe")
+
+" but if an unnamed buffer becomes named, use the default behaviour
+"
+" (BufNew is called after renaming)
+autocmd! BufNew *?* call setbufvar(str2nr(expand("<abuf>")), "&bufhidden", "")
+
+" or if it becomes a terminal
+autocmd! TerminalOpen * set buffhidden=
+
+nnoremap <Leader>u :GundoToggle<CR>
+
+" when `:make` jumps to errors, use the previous window
+set switchbuf=uselast
+
+" allow project to have their own .vimrc files
+set secure " don't let them do anything nefarious
+set exrc
+
+" use a good encryption algorithm for encypted files
+set cryptmethod=blowfish2
+
+" don't print scp messages when saving remote files
+let g:netrw_silent=1
+
+" don't use the popup when printing netrw errors - I always forget how to clear popup errors (:call popup_clear())
+let g:netrw_use_errorwindow=0
+
+" bind q@ to access the input() history (like q: or q/)
+nnoremap q@ :echo input('')<CR><C-F>
+
+" show wrapped lines if they continue off the bottom of the screen
+set display=lastline,uhex
+
 nnoremap <Leader>m :make<CR>
-nnoremap <Leader>b :make build<CR>
-nnoremap <Leader>t :make test<CR>
 
-" use vim's built-in man page viewer (|:help find-manpage|)
-runtime! ftplugin/man.vim
-nnoremap K :Man <cword><CR>
+" make diffs more legible
+hi DiffAdd ctermbg=black
+hi DiffChange ctermbg=black
+hi DiffDelete ctermbg=blue ctermfg=black
+hi DiffText cterm=reverse ctermbg=NONE ctermfg=NONE
 
-" by default * and # use ignorecase, but not smartcase - make them both
-" literal
-nnoremap * :let @/='\<'.expand('<cword>').'\>\C' <bar> let v:searchforward=1 <bar> normal n<CR>
-nnoremap # :let @/='\<'.expand('<cword>').'\>\C' <bar> let v:searchforward=0 <bar> normal n<CR>
+" hide swapfiles w/in netrw
+let g:netrw_list_hide='.%\.swp$'
+let g:netrw_altv_=1 " windows opened with 'v' open on the right
+let g:netrw_browse_split=0 " open current file with <CR> in the same window
+let g:netrw_banner=0 " hide the Netrw banner
+let g:netrw_preview = 1 " open current file with p in vertical split, keep cursor in netrw
+let g:netrw_liststyle = 3 " use tree view
+let g:netrw_winsize = 80 " keep netrw in 80 columns
+
+nnoremap <Leader>l :if exists(':Rexplore') <bar> exec 'Rexplore' <bar> else <bar> Explore <bar> endif<CR>
+
+" enable jsx highlighting in js files
+let g:jsx_ext_required = 0
+
+" make text wrapping more obvious but less annoying
+set wrap linebreak breakindent showbreak=…
+hi NonText ctermfg=208
+
+" expand <C-c> to word under cursor in command mode
+cnoremap <C-c> <C-r>=expand("<cword">)<CR>
+
+" default to using the X clipboard for copy/paste
+set clipboard=unnamedplus
+
+" TODO: migrate to an appropriate plugin
+" settings for when in a maven-managed directory
+if filereadable("pom.xml")
+  if !filereadable('Makefile')
+    let &makeprg="mvn compile"
+  endif
+  
+  " %C…WARNING before %W…WARNING to group all warnings into one so it only
+  " requires one :cn to skip past them
+  "
+  " INFO messages are removed by defaultLogLevel=INFO in ~/.mavenrc
+  let &errorformat=join([
+        \"%C[\e[1;33mWARNING\e[m]%m",
+        \"%W[\e[1;33mWARNING\e[m]%m,
+        \"%-E[\e[1;31mERROR\e[m] %\\w%\\+ errors found",
+        \"%-E[\e[1;31mERROR\e[m] Failed to execute goal %m",
+        \"%-E[\e[1;31mERROR\e[m] ",
+        \"%E[\e[1;31mERROR\e[m] [Error] %f:%l: %m",
+        \"%E[\e[1;31mERROR\e[m] %f:%l: %m",
+        \"%-Z[\e[1;31mERROR\e[m] %p^",
+        \"%-C[\e[1;31mERROR\e[m] %s",
+        \], ",")
+endif
+
+" use fzf to search for unicode codepoints
+"
+" depends on fzf.vim (from fzf-0.17.3.tar.gz) and unicode.vim (from
+" https://gitlab.com/chrisbra/unicode.vim)
+source $HOME/.vim/pack/_/start/unicode.vim/autoload/UnicodeData.vim
+
+let unicodeIndex = {}
+let name_column_width=max(map(values(g:unicode#unicode#data), {_, name -> strdisplaywidth(name)}))
+for [codepoint,name] in items(g:unicode#unicode#data)
+  let char = nr2char(codepoint)
+  let unicdeIndex[printf("U+%05x\t%*s\t%s", codepoint, -name_column_width, name, char)] = char
+endfor
+
+" use <C-K><C-K> in insert and terminal mode to quickly lookup a unicode
+" character by name
+inoremap <C-K><C-K> <C-R>=join(map(fzf#run({'source': keys(unicodeIndex), 'down': '10' }), 'unicodeIndex[v:val]'))<CR>
+tnoremap <C-K><C-K> <C-W>"=join(map(fzf#run({'source': keys(unicodeIndex), 'down': '10' }), 'unicodeIndex[v:val]'))<CR>
+
+" use <C-W>i to insert arbitrary text using insert-mode bindings
+tnoremap <C-W>i <C-W>"=insert("insertr: ")<CR>
+
+" use <C-K> to insert a digraph in the terminal
+tnoremap <silent> <C-K> <C-W>"=digraph_get(nr2char(getchar()) . nr2char(getchar()))<CR>
+
+" use <C-R> to paste a register in terminal mode
+tnoremap <C-R> <C-W>"
+
+" use <C-W>s and <C-W>v within a terminal to create a new terminal
+tnoremap <C-W>s <C-W>:terminal<CR>
+tnoremap <C-W>v <C-W>:vert terminal<CR>
+
+" easily insert lines without comment continuations
+nnoremap <Leader>o o<Esc>^Da
+nnoremap <Leader>O O<Esc>^Da
+
+" configure vimwiki
+let g:vimwiki_global_ext = 0
+let g:vimwiki_folding = 'custom'
+let g:vimwiki_list = 
+    \[ {'path': '~/Documents/wiki/'
+      \,'syntax': 'markdown'
+      \,'ext': '.md'
+      \,'nested_syntaxes':
+        \{ 'haskell': 'haskell'
+        \, 'ruby': 'ruby'
+        \, 'python': 'python'
+        \, 'c': 'c'
+        \, 'scala': 'scala'
+        \, 'java': 'java'
+        \, 'js': 'javascript'
+        \, 'sh': 'sh'
+        \, 'zsh': 'zsh'
+        \, 'xml': 'xml'
+        \, 'vim': 'vim'
+        \}
+      \}
+    \]
+command! -nargs=1 VWG VimwikiGoto <args>
+
+" fetch environment variables for current session from tmux
+function UpdateEnvironment()
+  for line in systemlist('tmux show-env')
+    let ix = match(line, '^[^-]\w\+\zs=')
+    if ix > -1
+      call setenv(line[:ix-1], line[ix+1:])
+    endif
+  endfor
+endfunction
+
+command UpdateEnvironment :call UpdateEnvironment
+command UP windo up
+
+if &term =~ '^screen'
+  " tmux will send xterm-style keys when its xterm-keys option is
+  " combined with `set-window-option -g xterm-keys on` in ~/.tmux.conf
+  " this makes bindings for <C-Up>, <C-Down> etc work as expected
+  "
+  " https://superuser.com/questions/401926
+  execute "set <xUp>=\e[1;*A"
+  execute "set <xDown>=\e[1;*B"
+  execute "set <xRight>=\e[1*C"
+  execute "set <xLeft>=\e[1;*D"
+end
+
+" use <C-P> and <C-N> instead of ↑ and ↓ for command line history navigation
+cnoremap <C-P> <Up>
+cnoremap <C-N> <Down>
+cnoremap <Up> <Nop>
+cnoremap <Down> <Nop>
+
+" monkey with the highlighting
+hi SpecialKey gui=bold
+hi NonText guifg=#fe8019
+
+" automatically format with rustfmt when editing rust files
+let g:rustfmt_autosave=1
+
+" An all-purpose path
+"
+" `.`    search directory of current file
+" `.;`   search upwards from the current files director
+" ``     search working directory (`:pwd`)
+" `;`    search upwards from working directory
+"
+" Avoid using ./** or ** to search downward from current file or directory as
+" that can be too inclusive, instead use :AddGitPath
+set path=.,.;,,;
+
+" Set the path to autocomplete to all the things in the git repository
+"
+" optional argument is directory containing .git directory
+"
+" defaults to current buffer's closest ancestor with a .git directory
+function! AddGitPath(...)
+  let l:gitdir = substitute(fnamemodify(a:0 ? FugitiveGitDir(a:1) : FugitiveGitDir(), ':p'), '.git/\?$', '', '')
+  silent let l:result = system('git --git-dir "' . l:gitdir . '.git" ls-files -z')
+  
+  if v:shell_error
+    echoe l:result
+    return
+  endif
+  
+  let &path.=','.
+    \l:result
+    \->split("\x01")
+    \->map({ix,path -> fnamemodify(l:gitdir . path, ':h')})
+    \->sort()
+    \->uniq()
+    \->join(',')
+endfunction
+ 
+command! -bar -nargs=? -complete=dir AddGitPath call AddGitPath(<f-args>)
+ 
+" run a pipeline of commands in a terminal
+command! -complete=file -nargs=+ Zsh terminal zsh -c <q-args>
+ 
+" get rid of lag when hitting <Esc> in a terminal
+au TerminalOpen * if &buftype == 'terminal' | setlocal ttimeoutlen=0 | endif
+ 
+" When 24-bit color is enabled for terminal, the terminal background is opaque.
+" Disabling that fixes the issue for now For more see `github.com/vim/vim/issues/2361`
+" set notermguicolors
+ 
+" configure ale to use the preview window (a bit noisy)
+"let g:ale_cursor_detail=1
+
+" configure FZF to use a terminal buffer
+let g:fzf_layout = {'window': 'belowright 30new'}
+
+" don't add a trailer newline to files if they don't already have one, it makes
+" for messier commit diffs
+set nofixendofline
+
+" change vertical separator between windows
+set fillchars+=vert:│
+
+" <C-W>gt is way too annoying a way to switch tab pages in a :terminal
+nnoremap <C-W>u gt
+nnoremap <C-W><C-U> gt
+nnoremap <C-W>U gT
+tnoremap <C-W>u <C-W>gt
+tnoremap <C-W><C-U> <C-W>gt
+tnoremap <C-W>U <C-W>gT
+
+function PrintGMT(epoch_milliseconds) abort
+  let l:tz = $TZ
+  let $TZ = "GMT"
+  let l:timestamp = strftime('%FT%T.'.printf("%03d", a:epoch_milliseconds % 1000).'Z', a:epoch_milliseconds/1000)
+  let $TZ = l:tz
+  return l:timestamp
+endfunction
+
+function ParseGMT(timestamp) abort
+  let l:match = matchlist(a:timestamp, '^\(\d\{4}-\d\{2}-\d\{2}T\d\{2}:\d\{2}\d\{2}\)\.\(\d\{3}\)Z$')
+  if len(l:match) == 0
+    echoerr "unable to parse timestamp: " . a:timestamp
+    return -1
+  endif
+  
+  let l:tz = $TZ
+  let $TZ = "GMT"
+  let l:epoch_seconds = strptime('%FT%T', l:match[1])
+  let $TZ = l:tz
+  
+  let l:millisecond_offset = str2nr(l:match[2], 10)
+  
+  return l:epoch_seconds * 1000 + l:millisecond_offset
+endfunction
+
+" enable extra highlighting from python-syntax project
+let g:python_highlight_all=1
+
+
