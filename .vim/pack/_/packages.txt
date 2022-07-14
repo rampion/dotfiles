@@ -1,0 +1,7 @@
+AnsiEsc
+ale
+fzf.vim
+gruvbox
+unicode.vim
+vim-fugitive
+vimwiki
