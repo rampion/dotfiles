@@ -1,0 +1,33 @@
+# Shell function to complete a git revision ID (hash).  To bind to ALT-r:
+#       autoload -U git-hash
+#       zle -C git-hash complete-word git-hash
+#       bindkey "\er" git-hash
+#
+# To complete objects in addition to revisions, use git-hash-objects
+#       autoload -U git-hash
+#       zle -C git-hash-objects complete-word git-hash-objects
+#       bindkey "\er" git-hash-objects
+#
+
+function _git_revlist () {
+    git rev-list --pretty=oneline --no-color --all $* 2>/dev/null | \
+        sed -re 's/^(.{'$COLUMNS'}).*$/\1/' --
+}
+
+function _git_hash_helper () {
+    local revlist hashes
+    revlist=(${(f)"$(_call_program hashes $*)"})
+    hashes=(${revlist%% *})
+    compadd -d revlist -- $hashes
+}
+
+function git-hash () {
+    _git_hash_helper _git_revlist
+}
+
+function git-hash-objects () {
+    _git_hash_helper _git_revlist --objects
+}
+
+
+# vim: set filetype=zsh :
