@@ -36,7 +36,7 @@ let &statusline
     "\ [+], [-] (modified flag
     \( "%m"
     "\ [hide], [unload], [delete], [wipe]
-    \. "[%{&bufhidden ? &bufhidden : &hidden ? 'hide' : 'unload'}]"
+    \. "[%{&bufhidden != '' ? &bufhidden : &hidden ? 'hide' : 'unload'}]"
     "\ [RO] (readonly flag)
     \. "%r"
     "\ [Preview]
