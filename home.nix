@@ -17,6 +17,14 @@
   # Raw configuration files
   home.file.".gitconfig".source = ./gitconfig;
 
+  # application-specific configuration
+  dconf.settings = {
+    # Make the Caps Lock key act like Esc
+    "org/gnome/desktop/input-sources" = {
+      xkb-options = [ "caps:escape" ];
+    };
+  };
+
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new Home Manager release introduces backwards
