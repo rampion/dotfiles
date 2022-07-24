@@ -53,3 +53,12 @@ in `/etc/nixos/configuration.nix`
 +   shell = pkgs.zsh;
   };
 ```
+
+## Change host name to johrlac
+
+Machine needs a name.
+
+```diff
+- networking.hostName = "nixos"; # Define your hostname.
++ networking.hostName = "johrlac";
+```
