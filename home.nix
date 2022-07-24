@@ -9,6 +9,16 @@
   home.username = "rampion";
   home.homeDirectory = "/home/rampion";
 
+  # Packages to install
+  home.packages = [
+    # pkgs is the set of all packages  in the default home.nix
+    # implementation
+    pkgs.git
+  ];
+
+  # Raw configuration files
+  home.file.".gitconfig".source = ./gitconfig;
+
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new Home Manager release introduces backwards
