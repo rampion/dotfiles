@@ -34,8 +34,11 @@ with import <nixpkgs> { };
     pkgs.tailscale # used to connect to Mercury's VPN
     pkgs.spotify
     pkgs.tree
+
     pkgs.ghc
     pkgs.cabal-install
+    pkgs.ghcid
+
     pkgs.fzf
     pkgs.gnumake
   ];
