@@ -37,6 +37,7 @@ with import <nixpkgs> { };
     pkgs.ghc
     pkgs.cabal-install
     pkgs.fzf
+    pkgs.gnumake
   ];
 
   # application-specific configuration
