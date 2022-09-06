@@ -35,6 +35,7 @@ with import <nixpkgs> { };
     pkgs.spotify
     pkgs.tree
     pkgs.ghc
+    pkgs.cabal-install
     pkgs.fzf
   ];
 
