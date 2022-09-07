@@ -1,3 +1,5 @@
 [user]
-	email = noah.easterly@gmail.com
-	name = Noah Luck Easterly
+  email = noah.easterly@gmail.com
+  name = Noah Luck Easterly
+[core]
+  excludesfile = ~/.gitexcludes

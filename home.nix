@@ -53,6 +53,7 @@ with import <nixpkgs> { };
 
   # Raw configuration files
   home.file.".gitconfig".source = ./gitconfig;
+  home.file.".gitexcludes".source = ./gitexcludes;
   home.file.".vim/plugin/statusline.vim".source = ./vim/plugin/statusline.vim;
 
   programs.vim = {
