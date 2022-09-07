@@ -147,7 +147,7 @@ command -range EscapeTags <line1>,<line2>s/[<>%]/\=html_escapes[submatch(0)]/g
 
 " templates for blank files (:help template)
 au BufNewFile *.{htm,html} r ~/.vim/templates/skeleton.html | 1d
-au BufNewFile ~/Documents/wiki/diary/\d\d\d\d-\d\d-\d\d.md let @/='<\%(START\|END\|ELAPSED\)>' | call setline(1, strftime("# %Y-%m-%d %9A <START>-<END> (<ELAPSED>hrs RG)", strptime("%Y-%m-%d", expand("%:t:r"))))
+au BufNewFile ~/Documents/wiki/diary/\d\d\d\d-\d\d-\d\d.md call setline(1, strftime("# %Y-%m-%d, %9A", strptime("%Y-%m-%d", expand("%:t:r"))))
 
 " let vim unload memory used for buffers not currently being displayed
 set nohidden
