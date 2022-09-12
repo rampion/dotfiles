@@ -10,8 +10,11 @@ if $TERM =~ "-256color"
   set termguicolors
 endif
 
-set background=dark
+" hide the scroll, menu, and tool bars in GVIM
+set guioptions=aegit
+
 colorscheme gruvbox
+set background=dark
 let g:gruvbox_sign_column="bg0"
 let g:gruvbox_contrast_dark="medium"
 
