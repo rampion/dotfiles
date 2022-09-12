@@ -264,20 +264,14 @@ for [codepoint,name] in items(g:unicode#unicode#data)
   let char = nr2char(codepoint)
   let unicodeIndex[printf("U+%05x\t%*s\t%s", codepoint, -name_column_width, name, char)] = char
 endfor
+let unicodeIndexKeys = sort(keys(unicodeIndex))
 
-if has('gui_running')
-  inoremap <C-K><C-K> <C-R>=join(map(fzf#run({'source': keys(unicodeIndex), 'down': 10 }), 'unicodeIndex[v:val]'))<CR>
-  tnoremap <C-K><C-K> <C-W>"=join(map(fzf#run({'source': keys(unicodeIndex), 'down': 10 }), 'unicodeIndex[v:val]'))<CR>
-else
-  " XXX: slight bug - this autopopulates the prompt with an 'I';
-  "      this can be removed by adding a `'down': '10'` argument to `fzf#run`, but
-  "      that makes `fzf#run` asynchronous, so it introduces other problems.
-  "
-  " use <C-K><C-K> in insert and terminal mode to quickly lookup a unicode
-  " character by name
-  inoremap <C-K><C-K> <C-R>=join(map(fzf#run({'source': keys(unicodeIndex) }), 'unicodeIndex[v:val]'))<CR>
-  tnoremap <C-K><C-K> <C-W>"=join(map(fzf#run({'source': keys(unicodeIndex) }), 'unicodeIndex[v:val]'))<CR>
-endif
+inoremap <expr> <C-K><C-K> fzf#vim#complete(fzf#wrap({
+      \ 'prefix': '',
+      \ 'source': unicodeIndexKeys,
+      \ 'options': '--height 10',
+      \ 'reducer': { lines -> g:unicodeIndex[lines[0]] }}))
+" todo: add tnoremap equivalent
 
 " configure FZF to use a terminal buffer
 let g:fzf_layout = {'window': 'belowright 30new'}
