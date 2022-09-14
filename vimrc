@@ -286,6 +286,9 @@ let g:ale_fix_on_save = 1
 " configure ale to use the preview window (a bit noisy)
 "let g:ale_cursor_detail=1
 
+" render <Shift-Space> as <Space>
+tnoremap <S-Space> <Space>
+
 " use <C-W>i to insert arbitrary text using insert-mode bindings
 tnoremap <C-W>i <C-W>"=insert("insertr: ")<CR>
 
