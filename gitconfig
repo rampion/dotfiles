@@ -3,3 +3,5 @@
   name = Noah Luck Easterly
 [core]
   excludesfile = ~/.gitexcludes
+[init]
+  defaultBranch = development
