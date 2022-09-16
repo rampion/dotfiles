@@ -113,4 +113,3 @@ fi
 # If the shell is not a login shell, "refresh" loaded modules to redefine
 # things like aliases that might be set in the module files and cannot be
 # inherited from a login shell.
-[[ -o LOGIN ]] || module refresh
