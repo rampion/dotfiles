@@ -91,11 +91,34 @@ with import <nixpkgs> { };
     ];
   };
 
+  home.file.".config/zsh/env/jq.zsh".source = ./zsh/env/jq.zsh;
+  home.file.".config/zsh/env/less.zsh".source = ./zsh/env/less.zsh;
+  home.file.".config/zsh/env/ls.zsh".source = ./zsh/env/ls.zsh;
+  home.file.".config/zsh/env/man.zsh".source = ./zsh/env/man.zsh;
+  home.file.".config/zsh/env/mvn.zsh".source = ./zsh/env/mvn.zsh;
+  home.file.".config/zsh/env/options.zsh".source = ./zsh/env/options.zsh;
+  home.file.".config/zsh/env/python.zsh".source = ./zsh/env/python.zsh;
+  home.file.".config/zsh/env/vim.zsh".source = ./zsh/env/vim.zsh;
+  home.file.".config/zsh/rc/git-completion.zsh".source = ./zsh/rc/git-completion.zsh;
+  home.file.".config/zsh/rc/history.zsh".source = ./zsh/rc/history.zsh;
+  home.file.".config/zsh/rc/options.zsh".source = ./zsh/rc/options.zsh;
+  home.file.".config/zsh/rc/prompt.zsh".source = ./zsh/rc/prompt.zsh;
+  home.file.".config/zsh/rc/term/xterm-256color.zsh".source = ./zsh/rc/term/xterm-256color.zsh;
+  home.file.".config/zsh/rc/time.zsh".source = ./zsh/rc/time.zsh;
+
   programs.zsh = {
     enable = true;
     sessionVariables = {
       SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/yubikey-agent/yubikey-agent.sock";
     };
+
+    dotDir = ".config/zsh";
+
+    envExtra = builtins.readFile ./zsh/env.zsh;
+    initExtra = builtins.readFile ./zsh/rc.zsh;
+    loginExtra = builtins.readFile ./zsh/login.zsh;
+    logoutExtra = builtins.readFile ./zsh/logout.zsh;
+    profileExtra = builtins.readFile ./zsh/profile.zsh;
   };
 
 }
