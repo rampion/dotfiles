@@ -23,6 +23,7 @@ source $ZDOTDIR/env/less.zsh
 source $ZDOTDIR/env/jq.zsh
 source $ZDOTDIR/env/mvn.zsh
 source $ZDOTDIR/env/python.zsh
+source $ZDOTDIR/env/nix.zsh
 
 # -----------------------------------------------------------------------------
 #                                    Terminal

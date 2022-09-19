@@ -102,6 +102,8 @@ prompt_parts=(
     '%k'              # background ← default
     $'\n'
   ')'
+  '%F{75}'
+  '$(nix-shell-info)'
   '%F{${vcs_info_msg_0_:-245}}'
                       # foreground ← color set by vcs_info (default to 245/grey)
   '%{'

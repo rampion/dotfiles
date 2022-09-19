@@ -45,6 +45,8 @@ with import <nixpkgs> { };
 
     pkgs.qpdf
     pkgs.imagemagickBig
+
+    pkgs.any-nix-shell
   ];
 
   # application-specific configuration
@@ -65,13 +67,23 @@ with import <nixpkgs> { };
     extraConfig = builtins.readFile ./vimrc;
 
     plugins =
-      let yesod-routes = pkgs.vimUtils.buildVimPlugin {
+      let
+        yesod-routes = pkgs.vimUtils.buildVimPlugin {
           name = "yesod-routes";
           src = pkgs.fetchFromGitHub {
             owner = "5outh";
             repo = "yesod-routes.vim";
             rev = "e00eaafe22aa33e2cf4a67d83dad4bc8ccdebbc5";
             sha256 = "1vPLDlMrzZErdAzmWTAFHvrqtRDo0W0OehHf1nGaVd0=";
+          };
+        };
+        syntax-shakespeare = pkgs.vimUtils.buildVimPlugin {
+          name = "vim-syntax-shakespeare";
+          src = pkgs.fetchFromGitHub {
+            owner = "pbrisbin";
+            repo = "vim-syntax-shakespeare";
+            rev = "2f4f61eae55b8f1319ce3a086baf9b5ab57743f3";
+            sha256 = "sdCXJOvB+vJE0ir+qsT/u1cHNxrksMnqeQi4D/Vg6UA=";
           };
         };
       in
@@ -92,6 +104,7 @@ with import <nixpkgs> { };
       pkgs.vimPlugins.vim-signify # inline git diffs
       pkgs.vimPlugins.vimwiki
       yesod-routes
+      syntax-shakespeare
     ];
   };
 
@@ -100,6 +113,7 @@ with import <nixpkgs> { };
   home.file.".config/zsh/env/ls.zsh".source = ./zsh/env/ls.zsh;
   home.file.".config/zsh/env/man.zsh".source = ./zsh/env/man.zsh;
   home.file.".config/zsh/env/mvn.zsh".source = ./zsh/env/mvn.zsh;
+  home.file.".config/zsh/env/nix.zsh".source = ./zsh/env/nix.zsh;
   home.file.".config/zsh/env/options.zsh".source = ./zsh/env/options.zsh;
   home.file.".config/zsh/env/python.zsh".source = ./zsh/env/python.zsh;
   home.file.".config/zsh/env/vim.zsh".source = ./zsh/env/vim.zsh;
