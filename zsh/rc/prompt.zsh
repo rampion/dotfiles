@@ -144,7 +144,7 @@ rprompt_parts=(
       '($vcs_info_msg_3_)'          # '(action)'
     '}'
     '%{%F{14\}%\}'
-    '${vcs_info_msg_4}'             # %a - git subdirectory
+    '${vcs_info_msg_4_}'            # %a - git subdirectory
   '}:-'                           # otherwise, we're not in a git repository
     '${(D)PWD}'                     # current path
                                     # (D) - abbreviate the current working directory using
