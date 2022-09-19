@@ -42,6 +42,9 @@ with import <nixpkgs> { };
 
     pkgs.fzf
     pkgs.gnumake
+
+    pkgs.qpdf
+    pkgs.imagemagickBig
   ];
 
   # application-specific configuration
