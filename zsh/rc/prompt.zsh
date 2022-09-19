@@ -79,8 +79,9 @@ prompt_parts=(
   '%(?::'           # when $? != 0
     '%K{196}'         # background ← bright red
     '%B'              # text ← bold
-    '%(?::%$(($COLUMNS-7))>>'
-                      # truncate contents to leave 7 unfilled columns
+    '%(?::%$(($COLUMNS-9))>>'
+                      # truncate contents to leave 9 unfilled columns
+                      # (not sure why 9, should be 7)
                         # HACK: The conditional is always true, but it is the
                         #       only way to stop the truncation before the next
                         #       part of the prompt.
