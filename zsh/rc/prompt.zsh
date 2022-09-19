@@ -133,8 +133,6 @@ rprompt_parts=(
   #
   #   if $EXPN expands to empty, ${${VAR:+TRUE}:-FALSE} expands to "FALSE"
   '${${vcs_info_msg_1_:+'         # if vcs_info_msg_1_ is non-empty
-    '%$((COLUMNS-1))>>'             # trim the following to be at most COLUMNS-1 wide
-                                    # (the trimming calculation is a little borked)
     '${vcs_info_msg_1_}'            # %R - path to base of git project
     '%{%F{$vcs_info_msg_0_\}%\}'    # closing } for %F and %{ must be escaped to not
                                     # end parameter-expansion ${... above
@@ -148,21 +146,15 @@ rprompt_parts=(
     '%{%F{14\}%\}'
     '${vcs_info_msg_4}'             # %a - git subdirectory
   '}:-'                           # otherwise, we're not in a git repository
-    '%$((COLUMNS-4))'               # trim the following to be at most COLUMNS-4 wide
-                                    # (2 for PROMPT, 1 for cursor, 1 for gutter on right)
     '${(D)PWD}'                     # current path
                                     # (D) - abbreviate the current working directory using
                                     #       directory names (like ~)
                                     #       see the AUTO_NAME_DIRS option
   '}'
-  '${(l:COLUMNS:)__nothing__+}'   # right-pad with whitespace to push the git info
-                                  # left toward the prompt, so that it'll disappear
-                                  # if the user types anything
 )
 # RPROMPT:
-#  Doesn't use TRANSIENT_RPROMPT to hide automatically after a comamnd is entered,
-#  rather it relies on the user to obscure it by typing over it.
 export RPROMPT=${(j::)rprompt_parts}
+setopt TRANSIENT_RPROMPT # hide rprompt from previous commands
 
 # to poulate the vcs_info_msg_*_ variables, we need to run the vcs_info
 # function before the prompt renders (precmd)
