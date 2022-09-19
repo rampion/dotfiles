@@ -38,6 +38,7 @@ with import <nixpkgs> { };
     pkgs.ghc
     pkgs.cabal-install
     pkgs.ghcid
+    pkgs.cabal2nix
 
     pkgs.fzf
     pkgs.gnumake
