@@ -122,4 +122,12 @@ with import <nixpkgs> { };
     profileExtra = builtins.readFile ./zsh/profile.zsh;
   };
 
+  # run by nix-shell
+  programs.bash = {
+    enable = true;
+    initExtra = ''
+      # use vi keybindings on the command line
+      set -o vi
+    '';
+  };
 }
