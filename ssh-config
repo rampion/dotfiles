@@ -1,0 +1,29 @@
+# Internal settings from https://www.notion.so/mercurytechnologies/Getting-Started-with-accessing-prod-fbb5e2053466498fbfa48808e9f8a587
+Host *.internal.mercury.co *.internal.mercury.com mercury-*
+    User rampion
+    #IdentityFile ~/.ssh/SSH_KEY_NAME
+
+Host mercury-staging
+    HostName 1.mercury-web-backend.staging.internal.mercury.com
+
+Host mercury-staging-prod
+    HostName 1.mercury-web-backend.staging-prod.internal.mercury.com
+
+Host mercury-staging-earth
+    HostName 1.mercury-web-backend.staging-earth.internal.mercury.com
+
+Host mercury-prod-1
+    HostName 1.mercury-web-backend.production.internal.mercury.com
+
+Host mercury-prod-2
+    HostName 2.mercury-web-backend.production.internal.mercury.com
+
+Host mercury-staging-worker
+    HostName 1.mercury-web-backend-worker.staging.internal.mercury.com
+
+Host mercury-prod-worker-1
+    HostName 1.mercury-web-backend-worker.production.internal.mercury.com
+
+Host mercury-prod-worker-2
+    HostName 2.mercury-web-backend-worker.production.internal.mercury.com
+# vi:ft=sshconfig
