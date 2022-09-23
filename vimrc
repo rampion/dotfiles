@@ -325,6 +325,7 @@ let g:vimwiki_list =
         \, 'java': 'java'
         \, 'js': 'javascript'
         \, 'sh': 'sh'
+        \, 'ts': 'typescript'
         \, 'zsh': 'zsh'
         \, 'xml': 'xml'
         \, 'vim': 'vim'
@@ -332,6 +333,21 @@ let g:vimwiki_list =
       \}
     \]
 command! -nargs=1 VWG VimwikiGoto <args>
+
+let g:markdown_fenced_languages = [
+      \'haskell',
+      \'ruby',
+      \'python',
+      \'c',
+      \'scala',
+      \'java',
+      \'js=javascript',
+      \'sh',
+      \'ts=typescript',
+      \'zsh',
+      \'xml',
+      \'vim'
+      \]
 
 " fetch environment variables for current session from tmux
 function UpdateEnvironment()
