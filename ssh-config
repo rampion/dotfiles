@@ -1,6 +1,6 @@
 # Internal settings from https://www.notion.so/mercurytechnologies/Getting-Started-with-accessing-prod-fbb5e2053466498fbfa48808e9f8a587
 Host *.internal.mercury.co *.internal.mercury.com mercury-*
-    User rampion
+    User noaheasterly
     #IdentityFile ~/.ssh/SSH_KEY_NAME
 
 Host mercury-staging
