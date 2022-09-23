@@ -348,6 +348,8 @@ let g:markdown_fenced_languages = [
       \'xml',
       \'vim'
       \]
+" don't autoconceal ```lang... ``` ticks
+let g:markdown_syntax_conceal=0
 
 " fetch environment variables for current session from tmux
 function UpdateEnvironment()
