@@ -26,23 +26,26 @@ with import <nixpkgs> { };
   home.packages = [
     # pkgs is the set of all packages in the default home.nix
     # implementation
-    pkgs.git
-    #pkgs.vim_configurable # used over pkgs.vim for +clipboard support
+
+    # 
     pkgs.zoom-us
     pkgs.slack
     pkgs.todoist-electron
-    pkgs.tailscale # used to connect to Mercury's VPN
     pkgs.spotify
-    pkgs.tree
 
     pkgs.ghc
     pkgs.cabal-install
     pkgs.ghcid
     pkgs.cabal2nix
 
+    # vim installed by programs.vim below
+    pkgs.git
+    pkgs.tree
     pkgs.fzf
     pkgs.gnumake
-
+    pkgs.zip
+    pkgs.unzip
+    pkgs.tailscale # used to connect to Mercury's VPN
     pkgs.qpdf
     pkgs.imagemagickBig
 
