@@ -48,6 +48,7 @@ with import <nixpkgs> { };
     pkgs.tailscale # used to connect to Mercury's VPN
     pkgs.qpdf
     pkgs.imagemagickBig
+    pkgs.jq
 
     pkgs.any-nix-shell
   ];
