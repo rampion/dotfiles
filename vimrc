@@ -47,7 +47,8 @@ set formatoptions=cqrlo
 " show the line numbers in-line
 set number
 
-" statusline moved to ~/.vim/plugin/statusline.vim
+" get rid of the audible bell
+set visualbell noerrorbells
 
 " ignore case in string matching, unless one of the characters is uppercase
 set ignorecase
