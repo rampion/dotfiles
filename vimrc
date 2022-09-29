@@ -438,3 +438,7 @@ set nofixendofline
 
 " change vertical separator between windows
 set fillchars+=vert:│
+
+" coc.nvim
+" - bring up a menu of possible quickfixes
+nnoremap <leader>f :CocFix<CR>

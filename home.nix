@@ -37,6 +37,7 @@ with import <nixpkgs> { };
     pkgs.cabal-install
     pkgs.ghcid
     pkgs.cabal2nix
+    pkgs.haskell-language-server
 
     # vim installed by programs.vim below
     pkgs.git
@@ -51,6 +52,9 @@ with import <nixpkgs> { };
     pkgs.jq
 
     pkgs.any-nix-shell
+
+    # required for coc.nvim
+    pkgs.nodejs
   ];
 
   # application-specific configuration
@@ -67,6 +71,7 @@ with import <nixpkgs> { };
   home.file.".ssh/config".source = ./ssh-config;
 
   home.file.".vim/plugin/statusline.vim".source = ./vim/plugin/statusline.vim;
+  home.file.".vim/coc-settings.json".source = ./vim/coc-settings.json;
 
   programs.vim = {
     enable = true;
@@ -92,11 +97,27 @@ with import <nixpkgs> { };
             sha256 = "sdCXJOvB+vJE0ir+qsT/u1cHNxrksMnqeQi4D/Vg6UA=";
           };
         };
+        coc-nvim = pkgs.vimUtils.buildVimPluginFrom2Nix {
+          pname = "coc.nvim";
+          version = "2022-05-21";
+          src = pkgs.fetchFromGitHub {
+            owner = "neoclide";
+            repo = "coc.nvim";
+            rev = "791c9f673b882768486450e73d8bda10e391401d";
+            sha256 = "sha256-MobgwhFQ1Ld7pFknsurSFAsN5v+vGbEFojTAYD/kI9c=";
+          };
+          meta.homepage = "https://github.com/neoclide/coc.nvim/";
+        };
       in
     [
       # browse available plugins via `nix-env -f '<nixpkgs>' -qaP -A vimPlugins`
       pkgs.vimPlugins.ale
+
+      # bug with current version of coc-nvim in nixpkgs
+      # https://github.com/nix-community/home-manager/issues/2966
       #pkgs.vimPlugins.coc-nvim
+      coc-nvim
+
       pkgs.vimPlugins.fzf-vim
       pkgs.vimPlugins.gruvbox
       pkgs.vimPlugins.gv-vim # git commit visualizer
