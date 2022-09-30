@@ -71,6 +71,7 @@ with import <nixpkgs> { };
   home.file.".ssh/config".source = ./ssh-config;
 
   home.file.".vim/plugin/statusline.vim".source = ./vim/plugin/statusline.vim;
+  home.file.".vim/after/ftplugin/markdown.vim".source = ./vim/after/ftplugin/markdown.vim;
   home.file.".vim/coc-settings.json".source = ./vim/coc-settings.json;
 
   programs.vim = {
