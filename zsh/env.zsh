@@ -13,7 +13,9 @@ source $ZDOTDIR/env/options.zsh
 # -----------------------------------------------------------------------------
 #                                      Path
 # -----------------------------------------------------------------------------
-# let home.nix manage this
+# let home.nix manage this, but let direnv alter it depending on current
+# directory
+source $ZDOTDIR/env/direnv.zsh
 
 # -----------------------------------------------------------------------------
 #                    Command-specific aliases and parameters

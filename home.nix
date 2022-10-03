@@ -52,6 +52,7 @@ with import <nixpkgs> { };
     pkgs.jq
 
     pkgs.any-nix-shell
+    pkgs.direnv
 
     # required for coc.nvim
     pkgs.nodejs
@@ -119,6 +120,7 @@ with import <nixpkgs> { };
       #pkgs.vimPlugins.coc-nvim
       coc-nvim
 
+      pkgs.vimPlugins.direnv-vim
       pkgs.vimPlugins.fzf-vim
       pkgs.vimPlugins.gruvbox
       pkgs.vimPlugins.gv-vim # git commit visualizer
@@ -136,6 +138,7 @@ with import <nixpkgs> { };
     ];
   };
 
+  home.file.".config/zsh/env/direnv.zsh".source = ./zsh/env/direnv.zsh;
   home.file.".config/zsh/env/jq.zsh".source = ./zsh/env/jq.zsh;
   home.file.".config/zsh/env/less.zsh".source = ./zsh/env/less.zsh;
   home.file.".config/zsh/env/ls.zsh".source = ./zsh/env/ls.zsh;
