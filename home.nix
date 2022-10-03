@@ -159,6 +159,7 @@ with import <nixpkgs> { };
     enable = true;
     sessionVariables = {
       SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/yubikey-agent/yubikey-agent.sock";
+      DOTFILES = ./.;
     };
 
     dotDir = ".config/zsh";
