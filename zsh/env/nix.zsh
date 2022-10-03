@@ -6,8 +6,8 @@ function nix-shell () {
 # Override version from any-nix-shell to remove ANSI escaped highlighting
 function nix-shell-info() {
   if [[ ${IN_NIX_SHELL-} != "" ]] || [[ ${IN_NIX_RUN-} != "" ]]; then
-      output=$(echo $ANY_NIX_SHELL_PKGS | xargs)
-      if [[ -n $name ]] && [[ $name != shell ]]; then
+      output=$(echo ${ANY_NIX_SHELL_PKGS-} | xargs)
+      if [[ ${name-shell} != shell ]]; then
           output+=" "$name
       fi
       if [[ -n $output ]]; then
