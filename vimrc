@@ -71,10 +71,10 @@ let mapleader=" "
 map <Leader>b :ls<cr>:b
 
 augroup backup
-  " Save backups of files in a parallel tree under ~/.backup, with each version
-  " tagged with the date and time.
+  " Save backup files and undo files in a parallel tree under ~/.backup, with
+  " each version tagged with the date and time.
   
-  " Make sureto have a cronjob or something regulalrly clear out stale entries
+  " Make sure to have a cronjob or something regulalrly clear out stale entries
   " ie `find ~/.backup -not -newerat "1 month ago" -delete`
   
   " We could instead use `~/.backup//` to store all the backups in a flat
@@ -84,6 +84,7 @@ augroup backup
   au BufWritePre *
         \ let &l:backupext=strftime(";%FT%T") |
         \ let &l:backupdir=$HOME.'/.backup'.expand("%:p:h") |
+        \ let &l:undodir=&l:backupdir |
         \ echo system("mkdir -p " . &backupdir)
 augroup END
 
