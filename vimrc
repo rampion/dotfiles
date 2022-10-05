@@ -210,7 +210,7 @@ hi DiffDelete ctermbg=blue ctermfg=black
 hi DiffText cterm=reverse ctermbg=NONE ctermfg=NONE
 
 " hide swapfiles w/in netrw
-let g:netrw_list_hide='.%\.swp$'
+let g:netrw_list_hide='\.sw\w$,\.un\~$'
 let g:netrw_altv_=1 " windows opened with 'v' open on the right
 let g:netrw_browse_split=0 " open current file with <CR> in the same window
 let g:netrw_banner=0 " hide the Netrw banner
