@@ -30,6 +30,7 @@ with import <nixpkgs> { };
     # 
     pkgs.zoom-us
     pkgs.slack
+    pkgs.discord
     pkgs.todoist-electron
     pkgs.spotify
 
