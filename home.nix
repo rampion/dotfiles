@@ -67,6 +67,29 @@ with import <nixpkgs> { };
     };
   };
 
+  # settings for the `nix` command, needed for `nix develop` to work in
+  # ~/Projects/mercury/mwb`
+  home.file.".local/share/nix/trusted-settings.json".text = ''
+    {
+      "allow-import-from-derivation": {
+        "true": true
+      },
+      "extra-substituters": {
+        "https://cache.mercury.com https://cache.iog.io": true,
+        "https://cache.mercury.com": true,
+        "https://cache.iog.io": true
+      },
+      "extra-trusted-public-keys": {
+        "cache.mercury.com:yhfFlgvqtv0cAxzflJ0aZW3mbulx4+5EOZm6k3oML+I= hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=": true,
+        "cache.mercury.com:yhfFlgvqtv0cAxzflJ0aZW3mbulx4+5EOZm6k3oML+I=": true,
+        "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=": true
+      }
+    }
+  '';
+  home.file.".config/nix/nix.conf".text = ''
+    experimental-features = nix-command flakes
+  '';
+
   # Raw configuration files
   home.file.".gitconfig".source = ./gitconfig;
   home.file.".gitexcludes".source = ./gitexcludes;
