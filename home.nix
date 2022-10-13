@@ -53,7 +53,6 @@ with import <nixpkgs> { };
     pkgs.jq
 
     pkgs.any-nix-shell
-    pkgs.direnv
 
     # required for coc.nvim
     pkgs.nodejs
@@ -89,6 +88,12 @@ with import <nixpkgs> { };
   home.file.".config/nix/nix.conf".text = ''
     experimental-features = nix-command flakes
   '';
+
+  # Use direnv to automatically set environment variables in directories with
+  # .envrc
+  programs.direnv.enable = true;
+  # make direnv's use_nix command faster
+  programs.direnv.nix-direnv.enable = true;
 
   # Raw configuration files
   home.file.".gitconfig".source = ./gitconfig;
