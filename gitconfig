@@ -10,3 +10,6 @@
   lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
 [push]
   default = simple
+[safe]
+  # allow git to interact with root-owned git repos in /etc/nixos
+  directory = /etc/nixos
