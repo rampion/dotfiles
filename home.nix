@@ -30,7 +30,7 @@ with import <nixpkgs> { };
     # 
     pkgs.zoom-us
     pkgs.slack
-    pkgs.discord
+    # pkgs.discord # out of date, won't run
     pkgs.todoist-electron
     pkgs.spotify
 
