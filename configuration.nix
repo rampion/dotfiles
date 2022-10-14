@@ -128,7 +128,7 @@ in
   services.cron = {
     enable = true;
     systemCronJobs = [
-      "@daily	rampion	find ~/.backup -not -newerat '1 month ago' -delete"
+      "0 0 * * *	rampion	find ~/.backup -not -newerat '1 month ago' -delete"
     ];
   };
 
