@@ -36,24 +36,6 @@ in
       mercury
     ];
 
-  mercury = {
-    # Enable the CA cert used for internal resources
-    internalCertificateAuthority.enable = true;
-
-    # Enable services required for MWB development (Postgres)
-    mwbDevelopment.enable = true;
-
-    # Enable the internal Nix cache
-    nixCache.enable = true;
-
-    # Create openvpn-mercury.service systemd service
-    vpn = {
-      enable = true;
-      # pritunl user profile downloaded from https://pritunl.mercury.com/k/1GpKNv597lPEKZTf
-      configurationPath = toString ./config.ovpn;
-    };
-  };
-
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -199,9 +181,28 @@ in
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.05"; # Did you read the comment?
 
-  # VPN tool; disabled until more mercury services moved from pritunl to
-  # tailscale
-  services.tailscale.enable = false;
+  mercury = {
+    # Enable the CA cert used for internal resources
+    internalCertificateAuthority.enable = true;
+
+    # Enable services required for MWB development (Postgres)
+    mwbDevelopment.enable = true;
+
+    # Enable the internal Nix cache
+    nixCache.enable = true;
+
+    # # Create openvpn-mercury.service systemd service
+    # # start via `sudo systemctl start openvpn-mercury.service`
+    # vpn = {
+    #   enable = true;
+    #   # pritunl user profile downloaded from https://pritunl.mercury.com/k/1GpKNv597lPEKZTf
+    #   configurationPath = toString ./config.ovpn;
+    # };
+  };
+
+  # VPN tool; not all mercury services are available yet
+  # (use pritunl for others)
+  services.tailscale.enable = true;
 
   # Clear up a warning after installing tailscale:
   # 
