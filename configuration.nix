@@ -102,9 +102,17 @@ in
     #media-session.enable = true;
   };
 
-  # Allow users with sudo access to specify additional binary caches, etc
-  # see `man 5 nix.conf`
-  nix.settings.trusted-users = [ "@wheel" ];
+  nix = {
+    # Allow users with sudo access to specify additional binary caches, etc
+    # see `man 5 nix.conf`
+    settings.trusted-users = [ "@wheel" ];
+
+    # Allow users to use builtins.doc to get documentation in the nix repl
+    # see https://github.com/lf-/nix-doc#nix-plugin-1
+    extraOptions = ''
+      plugin-files = ${pkgs.nix-doc}/lib/libnix_doc_plugin.so
+    '';
+  };
 
   # set up cron jobs
   services.cron = {
@@ -149,6 +157,8 @@ in
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
     pinentry-gnome # needed by yubikey-agent
+
+    nix-doc # used for looking up documentation
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
