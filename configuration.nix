@@ -172,8 +172,8 @@ in
 
   # use VirtualBox to run VMs for programs that can't run in NixOS (yet), like
   # tuple.
-  virtualisation.virtualbox.host.enable = true;
-  users.extraGroups.vboxusers.members = [ "rampion" ];
+  #virtualisation.virtualbox.host.enable = true;
+  #users.extraGroups.vboxusers.members = [ "rampion" ];
   # the guest additions package is currently broken:
   #     error: Package ‘VirtualBox-GuestAdditions-6.1.34-5.18.12’ in
   #     /nix/store/4mghfh8bnc42y9nj3b8hnm61v9430zfl-nixos-22.05/nixos/pkgs/applications/virtualization/virtualbox/guest-additions/default.nix:152
