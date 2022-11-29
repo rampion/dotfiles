@@ -58,6 +58,39 @@ in
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # This service prevents `nixos-rebuild switch` from completing
+  #
+  #   warning: the following units failed: NetworkManager-wait-online.service
+  #
+  #   × NetworkManager-wait-online.service - Network Manager Wait Online
+  #        Loaded: loaded (/etc/systemd/system/NetworkManager-wait-online.service; enabled; vendor preset: enabled)
+  #       Drop-In: /nix/store/7anjgivk775m3wwsqpzk9bymq5wyzri7-system-units/NetworkManager-wait-online.service.d
+  #                └─overrides.conf
+  #        Active: failed (Result: exit-code) since Tue 2022-11-29 14:57:01 EST; 18ms ago
+  #          Docs: man:nm-online(1)
+  #       Process: 717295 ExecStart=/nix/store/zywjmwncjwi9d6pw4n74lzjbg20p7mjz-networkmanager-1.38.4/bin/nm-online -s -q (code=exited, status=1/FAILURE)
+  #      Main PID: 717295 (code=exited, status=1/FAILURE)
+  #            IP: 0B in, 0B out
+  #           CPU: 45ms
+  #
+  #   Nov 29 14:56:01 johrlac systemd[1]: Starting Network Manager Wait Online...
+  #   Nov 29 14:57:01 johrlac systemd[1]: NetworkManager-wait-online.service: Main process exited, code=exited, status=1/FAILURE
+  #   Nov 29 14:57:01 johrlac systemd[1]: NetworkManager-wait-online.service: Failed with result 'exit-code'.
+  #   Nov 29 14:57:01 johrlac systemd[1]: Failed to start Network Manager Wait Online.
+  #
+  # Apparently the underlying command, `nm-online` will often return an error
+  # code if the system has been up for an extended period of time.
+  #
+  #   johrlac# uptime
+  #    15:06:32  up 2 days  2:41,  1 user,  load average: 0.95, 1.05, 1.36
+  #   johrlac# nm-online -s -q
+  #   johrlac# echo $?
+  #   1
+  #
+  # For more details see this thread
+  # https://github.com/NixOS/nixpkgs/issues/180175
+  systemd.services.NetworkManager-wait-online.enable = false;
+
   # Set your time zone.
   time.timeZone = "America/New_York";
 
