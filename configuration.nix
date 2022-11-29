@@ -89,7 +89,7 @@ in
   #
   # For more details see this thread
   # https://github.com/NixOS/nixpkgs/issues/180175
-  systemd.services.NetworkManager-wait-online.enable = false;
+  #systemd.services.NetworkManager-wait-online.enable = false;
 
   # Set your time zone.
   time.timeZone = "America/New_York";
