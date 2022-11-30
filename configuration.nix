@@ -194,6 +194,10 @@ in
     nix-doc # used for looking up documentation
   ];
 
+  # set the $WORDLIST variable to point to a local equivalent to
+  # /usr/share/dict/words
+  environment.wordlist.enable = true;
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
