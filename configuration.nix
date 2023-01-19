@@ -145,6 +145,9 @@ in
     extraOptions = ''
       plugin-files = ${pkgs.nix-doc}/lib/libnix_doc_plugin.so
     '';
+
+    # Automatically run the garbage collector at a specific time.
+    gc.automatic = true;
   };
 
   # set up cron jobs
