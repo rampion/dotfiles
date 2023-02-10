@@ -215,6 +215,8 @@ in
   services.openssh.enable = true;
 
   services.pcscd.enable = true; # Use the smart card mode (CCID) of yubikey
+
+  # Note that yubikey-agent will use whatever pinentry is specified in programs.gnupg.agent.pinentryFlavor.
   services.yubikey-agent.enable = true; # used for SSH agent
 
   # Open ports in the firewall.
