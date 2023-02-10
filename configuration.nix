@@ -10,7 +10,7 @@ let
       builtins.fetchGit {
         url = "git@github.com:MercuryTechnologies/nixos-configuration.git";
         ref = "main";
-        rev = "8a489b096f37623e9dd0a5454ad11d5b76b90d36";
+        rev = "e3254f28bb27fd510b96679826fb190b4d7d62ed";
       }
     }/nixos-modules";
 
